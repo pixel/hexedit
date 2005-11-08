@@ -7,6 +7,7 @@ SHELL = /bin/sh
 
 CC = @CC@
 CFLAGS = @CFLAGS@
+
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 DEFS = @DEFS@
@@ -15,7 +16,7 @@ INSTALL = @INSTALL@
 # Installation directories
 prefix = @prefix@
 exec_prefix = @exec_prefix@
-mandir = @mandir@/man1
+mandir = @mandir@
 bindir = @bindir@
 
 INCL = @INCL@
@@ -33,13 +34,13 @@ $(PRODUCT): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 
 clean:
-	rm -f *~ *.o core $(PRODUCT)
+	rm -rf *~ *.o core *.cache config.status config.log $(PRODUCT)
 
 distclean: clean
-	rm -f Makefile config.cache config.status config.log
+	rm -f Makefile config.h
 
 install: $(PRODUCT)
 	$(INSTALL) -d -m 755 $(bindir)
 	$(INSTALL) -s -m 755 $(PRODUCT) $(bindir)
-	$(INSTALL) -d -m 755 $(mandir)
-	$(INSTALL) -m 644 $(PRODUCT).1 $(mandir)
+	$(INSTALL) -d -m 755 $(mandir)/man1
+	$(INSTALL) -m 644 $(PRODUCT).1 $(mandir)/man1

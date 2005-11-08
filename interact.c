@@ -259,7 +259,7 @@ static void goto_char(void)
 
   echo();
   displayOneLineMessage("New position ? 0x");
-  getstr(tmp);
+  getnstr(tmp, BLOCK_SEARCH_SIZE - 1);
   b = sscanf(tmp, "%llx",&i);
   noecho();
   if (b != 1 || !set_cursor(i)) displayMessageAndWaitForKey("Invalid position!");

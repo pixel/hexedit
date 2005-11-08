@@ -74,7 +74,7 @@ void yank_to_a_file(void)
 
   if (copyBuffer == NULL) { displayMessageAndWaitForKey("Nothing to paste"); return; }
 
-  if (!displayMessageAndGetString("File name (", &lastYankToAFile, tmp)) return;
+  if (!displayMessageAndGetString("File name (", &lastYankToAFile, tmp, sizeof(tmp))) return;
   
   if ((f = open(tmp, O_RDONLY)) != -1) {
     close(f);
@@ -102,7 +102,7 @@ void fill_with_string(void)
     displayTwoLineMessage("Hey, don't you think that's too big?!", "Really fill (Yes/No)");
     if (tolower(getch()) != 'y') return;
   }  
-  if (!displayMessageAndGetString(msg, last, tmp2)) return;
+  if (!displayMessageAndGetString(msg, last, tmp2, sizeof(tmp2))) return;
   l1 = mark_max - mark_min + 1;
   l2 = strlen(tmp2);
   if (hexOrAscii) {

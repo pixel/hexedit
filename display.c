@@ -80,7 +80,7 @@ int set_base(INT loc)
 }
 
 
-int computeLineSize(void) { return computeCursorXPos(lineLength - 1, 0) + 2; }
+int computeLineSize(void) { return computeCursorXPos(lineLength - 1, 0) + 1; }
 int computeCursorXCurrentPos(void) { return computeCursorXPos(cursor, hexOrAscii); }
 int computeCursorXPos(int cursor, int hexOrAscii)
 {
@@ -142,13 +142,21 @@ void display(void)
 {
   int i;
 
-  move(0,0);
-  for (i = 0; i < nbBytes; i += lineLength) displayLine(i, nbBytes);
-  for (; i < page; i += lineLength) PRINTW(("%08lX\n", base + i))
+  for (i = 0; i < nbBytes; i += lineLength) {
+    move(i / lineLength, 0);
+    displayLine(i, nbBytes);
+  }
+  for (; i < page; i += lineLength) {
+    int j;
+    move(i / lineLength, 0);
+    for (j = 0; j < colsUsed; j++) printw(" "); /* cleanup the line */
+    move(i / lineLength, 0);
+    PRINTW(("%08lX", (int) (base + i)));
+  }
 
   attrset(NORMAL);
   move(LINES - 1, 0);
-  for (i = 0; i < colsUsed - 1; i++) printw("-");
+  for (i = 0; i < colsUsed; i++) printw("-");
   move(LINES - 1, 0);
   if (isReadOnly) i = '%';
   else if (edited) i = '*';
@@ -164,7 +172,7 @@ void displayLine(int offset, int max)
 {
   int i;
 
-  PRINTW(("%08lX   ", base + offset))
+  PRINTW(("%08lX   ", (int) (base + offset)))
   for (i = offset; i < offset + lineLength; i++) {
      if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "))
      if (i < max) ATTRPRINTW(bufferAttr[i], ("%02X", buffer[i]))
@@ -176,7 +184,6 @@ void displayLine(int offset, int max)
     else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW(bufferAttr[i], ("%c", buffer[i]))
     else ATTRPRINTW(bufferAttr[i], ("."))
   }
-  PRINTW(("\n"))
 }
 
 void clr_line(int line) { move(line, 0); clrtoeol(); }
@@ -212,7 +219,7 @@ void displayMessageAndWaitForKey(char *msg)
   getch();
 }
 
-int displayMessageAndGetString(char *msg, char **last, char *p)
+int displayMessageAndGetString(char *msg, char **last, char *p, int p_size)
 {
   char *msgComplete;
   int ret = TRUE;
@@ -220,7 +227,7 @@ int displayMessageAndGetString(char *msg, char **last, char *p)
   msgComplete = strconcat3(msg, *last, ") ");
   echo();
   displayOneLineMessage(msgComplete);
-  getstr(p);
+  getnstr(p, p_size - 1);
   noecho();
   free(msgComplete);
   if (*p == '\0') {

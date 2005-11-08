@@ -23,6 +23,9 @@
 #if HAVE_LIBGEN_H
 #include <libgen.h>
 #endif
+#if HAVE_SYS_MOUNT_H
+#include <sys/mount.h> /* for BLKGETSIZE */
+#endif
 
 
 #define INT off_t
@@ -146,7 +149,7 @@ void displayCentered(char *msg, int line);
 void displayOneLineMessage(char *msg);
 void displayTwoLineMessage(char *msg1, char *msg2);
 void displayMessageAndWaitForKey(char *msg);
-int displayMessageAndGetString(char *msg, char **last, char *p);
+int displayMessageAndGetString(char *msg, char **last, char *p, int p_size);
 
 
 /*******************************************************************************/

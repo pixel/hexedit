@@ -16,19 +16,19 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
 #include "hexedit.h"
 
-static int searchA(char **string, int *sizea, char *tmp);
-static void searchB(int quit, char *string);
+static int searchA(char **string, int *sizea, char *tmp, int tmp_size);
+static void searchB(INT loc, char *string);
 
 /*******************************************************************************/
 /* Search functions */
 /*******************************************************************************/
-static int searchA(char **string, int *sizea, char *tmp)
+static int searchA(char **string, int *sizea, char *tmp, int tmp_size)
 {
   char *msg = hexOrAscii ? "Hexa string to search: (" : "Ascii string to search: (";
   char **last = hexOrAscii ? &lastAskHexString : &lastAskAsciiString;
 
   if (!ask_about_save_and_redisplay()) return FALSE;
-  if (!displayMessageAndGetString(msg, last, tmp)) return FALSE;
+  if (!displayMessageAndGetString(msg, last, tmp, tmp_size)) return FALSE;
 
   *sizea = strlen(tmp);
   if (hexOrAscii) if (!hexStringToBinString(tmp, sizea)) return FALSE;
@@ -41,7 +41,7 @@ static int searchA(char **string, int *sizea, char *tmp)
   return TRUE;
 }
 
-static void searchB(int loc, char *string)
+static void searchB(INT loc, char *string)
 {
   nodelay(stdscr, FALSE);
   free(string);
@@ -58,12 +58,12 @@ void search_forward(void)
   int quit, sizea, sizeb;
   INT blockstart;
 
-  if (!searchA(&string, &sizea, tmp)) return;
+  if (!searchA(&string, &sizea, tmp, sizeof(tmp))) return;
   quit = -1;
   blockstart = base + cursor - BLOCK_SEARCH_SIZE + sizea;
   do {
     blockstart += BLOCK_SEARCH_SIZE - sizea + 1;
-    LSEEK(fd, blockstart);
+    if (LSEEK_(fd, blockstart) == -1) { quit = -3; break; }
     if ((sizeb = read(fd, tmp, BLOCK_SEARCH_SIZE)) < sizea) quit = -3;
     else if (getch() != ERR) quit = -2;
     else if ((p = mymemmem(tmp, sizeb, string, sizea))) quit = p - tmp;
@@ -83,7 +83,7 @@ void search_backward(void)
   int quit, sizea, sizeb;
   INT blockstart;
 
-  if (!searchA(&string, &sizea, tmp)) return;
+  if (!searchA(&string, &sizea, tmp, sizeof(tmp))) return;
   quit = -1;
   blockstart = base + cursor - sizea + 1;
   do {
@@ -93,7 +93,7 @@ void search_backward(void)
 
     if (sizeb < sizea) quit = -3;
     else {
-      LSEEK(fd, blockstart);
+      if (LSEEK_(fd, blockstart) == -1) { quit = -3; break; }
       if (sizeb != read(fd, tmp, sizeb)) quit = -3;
       else if (getch() != ERR) quit = -2;
       else if ((p = mymemrmem(tmp, sizeb, string, sizea))) quit = p - tmp;

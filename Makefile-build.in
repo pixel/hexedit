@@ -45,12 +45,12 @@ html-site: tar dynamic docs
 	tar cf $(HTMLSITE) $(TMPFILES)
 
 clean:
-	$(MAKE) clean
-	rm -f $(TMPFILES) $(HTMLSITE) TAGS config.* $(FROMINFILES)
+	[ ! -e Makefile ] || $(MAKE) clean
+	rm -f $(TMPFILES) $(HTMLSITE) TAGS $(FROMINFILES)
 
 distclean: clean
-	$(MAKE) distclean
-	rm -f Makefile-build
+	[ ! -e Makefile ] || $(MAKE) distclean
+	rm -f Makefile-build configure config.h.in
 
 ci: clean
 	ci -l -mdefault *

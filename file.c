@@ -41,9 +41,18 @@ void openFile(void)
   lastEditedLoc = base = cursor = cursorOffset = 0;
 
   /* check file size- doesn't work on devices.  I considered implementing a conquer-and-divide algorithm, but it would unpleasant on tape drives and such. */
-  biggestLoc = fileSize = (fstat(fd, &st) != -1 && st.st_size > 0) ? st.st_size : 0;
-  /* else biggestLoc = lseek(fd, 0, SEEK_END); *//* doesn't work on any devices I've tried it on, but it might work -somewhere- */
-
+  if (fstat(fd, &st) != -1 && st.st_size > 0)
+    fileSize = st.st_size;
+  else {
+#ifdef BLKGETSIZE
+    unsigned long i;
+    if (ioctl(fd, BLKGETSIZE, &i) == 0)
+      fileSize = (INT) i * 512;
+    else
+#endif
+      fileSize = 0;
+  }
+  biggestLoc = fileSize;
 }
 
 void readFile(void)
@@ -80,7 +89,7 @@ int findFile(void)
 {
   char *p, tmp[BLOCK_SEARCH_SIZE];
   p = lastFindFile ? strdup(lastFindFile) : NULL;
-  if (!displayMessageAndGetString("File name: (", &p, tmp)) return FALSE;
+  if (!displayMessageAndGetString("File name: (", &p, tmp, sizeof(tmp))) return FALSE;
   if (!is_file(tmp)) return FALSE;
   FREE(lastFindFile); lastFindFile = fileName;
   fileName = p;
@@ -111,8 +120,8 @@ int tryloc(INT loc)
   if (loc <= biggestLoc)
     return TRUE;
 
-  LSEEK(fd, loc - 1);  /* don't have to worry about loc - 1 < 0 */
-  if (read(fd, &c, 1) == 1) {
+  if (LSEEK_(fd, loc - 1) != -1 && /* don't have to worry about loc - 1 < 0 */
+      read(fd, &c, 1) == 1) {
     biggestLoc = loc;
     return TRUE;
   }

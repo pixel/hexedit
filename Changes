@@ -1,3 +1,36 @@
+april 2004:
+	- version 1.2.9 (brown paper bag version)
+	- fix searching larger than 3 characters long strings
+
+january 2004:
+	- version 1.2.8
+	- replace the unsafe getstr() with getnstr() (thanks to Richard Chadderton)
+
+august 2003:
+	- version 1.2.7
+	- check the presence of <sys/mount.h> before including it
+	- fix build on Digital UNIX 4.0f (remove -Wall)
+	- use the full width of the terminal (the trick is to stop relying on
+	printing "\n", but using move() instead)
+	- fix displaying the offsets at beginning of each line on big endian
+	boxes (thanks to Martin Schaffner)
+
+june 2003:
+	- version 1.2.6
+	- fix core dump when searching backward (thanks to Jean Delvare)
+          (the culprit is memrmem, but also fixing provided memrchr)
+
+june 2003:
+	- version 1.2.5
+	- fix build on Solaris (which doesn't have BLKGETSIZE and all compilers don't have -W)
+
+march 2003:
+	- version 1.2.4
+	- use BLKGETSIZE to try to get the size of a device
+	- do not die horribly when accessing after the end
+	- fix provided memrchr() (thanks to Yue Luo)
+	- fix displaying after searching >32bit files (thanks to Paul Mattal)
+
 june 2002:
 	- version 1.2.3
 	- add some KEY_HOME KEY_END (^[[7~ and ^[[8~)

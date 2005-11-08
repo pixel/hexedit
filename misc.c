@@ -41,7 +41,7 @@ void LSEEK(int fd, INT where)
 /* Functions provided for OSs that don't have them */
 /*******************************************************************************/
 #ifndef HAVE_BASENAME
-char *basename(const char *file) {
+char *basename(char *file) {
   char *p = strrchr(file, '/');
   return p ? p + 1 : file;
 }
@@ -99,10 +99,11 @@ int hexCharToInt(int c)
 int not(int b) { return b ? FALSE: TRUE; }
 
 #ifndef HAVE_MEMRCHR
-char *memrchr(void *s, char c, int n)
+void *memrchr(const void *s, int c, size_t n)
 {
   int i;
-  for (i = n - 1; i; i--) if (s[i] == c) return &s[i];
+  const char *cs = s;
+  for (i = n - 1; i >= 0; i--) if (cs[i] == c) return (void *) &cs[i];
   return NULL;
 }
 #endif
@@ -134,7 +135,7 @@ char *mymemrmem(char *a, int sizea, char *b, int sizeb)
   int i = sizea - sizeb + 1;
   
   a += sizea - 1;
-  for (; (p = memrchr(a - i, b[sizeb - 1], i)); i -= a - p + 1, a = p - 1)
+  for (; (p = memrchr(a - i + 1, b[sizeb - 1], i)); i -= a - p + 1, a = p - 1)
   {
     if ((memcmp(p - sizeb + 1, b, sizeb - 1)) == 0) return p;
   }
