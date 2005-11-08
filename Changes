@@ -1,3 +1,7 @@
+may 2004:
+	- version 1.2.10
+	- handle getnstr() not defined (needed for SGI IRIX 6.5.22)
+
 april 2004:
 	- version 1.2.9 (brown paper bag version)
 	- fix searching larger than 3 characters long strings

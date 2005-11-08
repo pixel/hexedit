@@ -50,6 +50,9 @@
 #define ATTRPRINTW(attr, a) { if (oldattr != (attr)) attrset(attr), oldattr = (attr); printw a; }
 #define MAXATTRPRINTW(attr, a) { if (oldattr & (~(attr))) attrset(attr & oldattr), oldattr &= (attr); printw a; }
 #define PRINTW(a) ATTRPRINTW(NORMAL, a)
+#ifndef getnstr
+  #define getnstr(str, n) wgetnstr(stdscr, str, n)
+#endif
 
 
 /*******************************************************************************/
