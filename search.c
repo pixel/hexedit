@@ -24,7 +24,7 @@ static void searchB(INT loc, char *string);
 /*******************************************************************************/
 static int searchA(char **string, int *sizea, char *tmp, int tmp_size)
 {
-  char *msg = hexOrAscii ? "Hexa string to search: (" : "Ascii string to search: (";
+  char *msg = hexOrAscii ? "Hexa string to search: " : "Ascii string to search: ";
   char **last = hexOrAscii ? &lastAskHexString : &lastAskAsciiString;
 
   if (!ask_about_save_and_redisplay()) return FALSE;

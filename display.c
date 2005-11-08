@@ -103,6 +103,13 @@ int computeCursorXPos(int cursor, int hexOrAscii)
 void initCurses(void)
 {
   initscr();
+#ifdef ENABLE_COLORS
+  start_color();
+  use_default_colors();
+  init_pair(1, COLOR_RED, -1);   /* null zeros */
+  init_pair(2, COLOR_GREEN, -1); /* control chars */
+  init_pair(3, COLOR_BLUE, -1);  /* extended chars */
+#endif
   refresh();
   raw();
   noecho();
@@ -172,17 +179,25 @@ void displayLine(int offset, int max)
 {
   int i;
 
-  PRINTW(("%08lX   ", (int) (base + offset)))
+  PRINTW(("%08lX   ", (int) (base + offset)));
   for (i = offset; i < offset + lineLength; i++) {
-     if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "))
-     if (i < max) ATTRPRINTW(bufferAttr[i], ("%02X", buffer[i]))
-     else PRINTW(("  "))
+    if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "));
+    if (i < max) {
+      ATTRPRINTW(
+#ifdef ENABLE_COLORS
+		 (buffer[i] == 0 ? COLOR_PAIR(1) :
+		  buffer[i] < ' ' ? COLOR_PAIR(2) : 
+		  buffer[i] >= 127 ? COLOR_PAIR(3) : 0) |
+#endif
+		 bufferAttr[i], ("%02X", buffer[i]));
+    }
+    else PRINTW(("  "));
   }
-  PRINTW(("  "))
+  PRINTW(("  "));
   for (i = offset; i < offset + lineLength; i++) {
-    if (i >= max) PRINTW((" "))
-    else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW(bufferAttr[i], ("%c", buffer[i]))
-    else ATTRPRINTW(bufferAttr[i], ("."))
+    if (i >= max) PRINTW((" "));
+    else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW(bufferAttr[i], ("%c", buffer[i]));
+    else ATTRPRINTW(bufferAttr[i], ("."));
   }
 }
 
@@ -215,21 +230,18 @@ void displayTwoLineMessage(char *msg1, char *msg2)
 void displayMessageAndWaitForKey(char *msg)
 {
   displayTwoLineMessage(msg, pressAnyKey);
-  noecho();
   getch();
 }
 
 int displayMessageAndGetString(char *msg, char **last, char *p, int p_size)
 {
-  char *msgComplete;
   int ret = TRUE;
 
-  msgComplete = strconcat3(msg, *last, ") ");
+  displayOneLineMessage(msg);
+  ungetstr(*last);
   echo();
-  displayOneLineMessage(msgComplete);
   getnstr(p, p_size - 1);
   noecho();
-  free(msgComplete);
   if (*p == '\0') {
     if (*last) strcpy(p, *last); else ret = FALSE;
   } else {
@@ -237,4 +249,25 @@ int displayMessageAndGetString(char *msg, char **last, char *p, int p_size)
     *last = strdup(p);
   }
   return ret;
+}
+
+void ungetstr(char *s)
+{
+  char *p;
+  if (s)
+    for (p = s + strlen(s) - 1; p >= s; p--) ungetch(*p);
+}
+
+int get_number(INT *i)
+{
+  int err;
+  char tmp[BLOCK_SEARCH_SIZE];
+  echo();
+  getnstr(tmp, BLOCK_SEARCH_SIZE - 1);
+  noecho();
+  if (strbeginswith(tmp, "0x"))
+    err = sscanf(tmp + strlen("0x"), "%llx", i);
+  else
+    err = sscanf(tmp, "%lld", i);
+  return err == 1;
 }

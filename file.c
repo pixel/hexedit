@@ -89,7 +89,7 @@ int findFile(void)
 {
   char *p, tmp[BLOCK_SEARCH_SIZE];
   p = lastFindFile ? strdup(lastFindFile) : NULL;
-  if (!displayMessageAndGetString("File name: (", &p, tmp, sizeof(tmp))) return FALSE;
+  if (!displayMessageAndGetString("File name: ", &p, tmp, sizeof(tmp))) return FALSE;
   if (!is_file(tmp)) return FALSE;
   FREE(lastFindFile); lastFindFile = fileName;
   fileName = p;

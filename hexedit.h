@@ -47,8 +47,8 @@
 #define NORMAL A_NORMAL
 #define MARKED A_REVERSE
 #define MODIFIED A_BOLD
-#define ATTRPRINTW(attr, a) { if (oldattr != (attr)) attrset(attr), oldattr = (attr); printw a; }
-#define MAXATTRPRINTW(attr, a) { if (oldattr & (~(attr))) attrset(attr & oldattr), oldattr &= (attr); printw a; }
+#define ATTRPRINTW(attr, a) do { if (oldattr != (attr)) attrset(attr), oldattr = (attr); printw a; } while (0)
+#define MAXATTRPRINTW(attr, a) do { if (oldattr & (~(attr))) attrset(attr & oldattr), oldattr &= (attr); printw a; } while (0)
 #define PRINTW(a) ATTRPRINTW(NORMAL, a)
 #ifndef getnstr
   #define getnstr(str, n) wgetnstr(stdscr, str, n)
@@ -153,6 +153,8 @@ void displayOneLineMessage(char *msg);
 void displayTwoLineMessage(char *msg1, char *msg2);
 void displayMessageAndWaitForKey(char *msg);
 int displayMessageAndGetString(char *msg, char **last, char *p, int p_size);
+void ungetstr(char *s);
+int get_number(INT *i);
 
 
 /*******************************************************************************/
@@ -181,6 +183,7 @@ void fill_with_string(void);
 /* Small common functions declaration */
 /*******************************************************************************/
 int streq(const char *s1, const char *s2);
+int strbeginswith(const char *a, const char *prefix);
 int myceil(int a, int b);
 INT myfloor(INT a, INT b);
 int setLowBits(int p, int val);

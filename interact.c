@@ -89,11 +89,17 @@ static void end_of_line(void)
 static void scroll_up(void)
 {
   move_base(+page);
+
+  if (mark_set)
+    updateMarked();
 }
 
 static void scroll_down(void)
 {
   move_base(-page);
+
+  if (mark_set)
+    updateMarked();
 }
 
 static void beginning_of_buffer(void)
@@ -253,32 +259,22 @@ void ask_about_save_and_quit(void)
 
 static void goto_char(void)
 {
-  long long i;
-  int b;
-  char tmp[BLOCK_SEARCH_SIZE];
+  INT i;
 
-  echo();
-  displayOneLineMessage("New position ? 0x");
-  getnstr(tmp, BLOCK_SEARCH_SIZE - 1);
-  b = sscanf(tmp, "%llx",&i);
-  noecho();
-  if (b != 1 || !set_cursor(i)) displayMessageAndWaitForKey("Invalid position!");
+  displayOneLineMessage("New position ? ");
+  ungetstr("0x");
+  if (!get_number(&i) || !set_cursor(i)) displayMessageAndWaitForKey("Invalid position!");
 }
 
 static void goto_sector(void)
 {
-  int i, b;
+  INT i;
 
-  echo();
   displayOneLineMessage("New sector ? ");
-  b = scanw("%d",&i);
-  noecho();
-  if (b == 1) {
-    if (!set_base(i * SECTOR_SIZE))
-      displayMessageAndWaitForKey("Invalid sector!");
-    else
-      set_cursor(i * SECTOR_SIZE);
-  }
+  if (get_number(&i) && set_base(i * SECTOR_SIZE))
+    set_cursor(i * SECTOR_SIZE);
+  else
+    displayMessageAndWaitForKey("Invalid sector!");
 }
 
 

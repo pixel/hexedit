@@ -77,6 +77,11 @@ INT myfloor(INT a, INT b) { return a - a % b; }
 int setLowBits(int p, int val) { return (p & 0xF0) + val; }
 int setHighBits(int p, int val) { return (p & 0x0F) + val * 0x10; }
 
+int strbeginswith(const char *a, const char *prefix)
+{
+  return strncmp(a, prefix, strlen(prefix)) == 0;
+}
+
 char *strconcat3(char *a, char *b, char *c)
 {
   size_t la = a ? strlen(a) : 0;

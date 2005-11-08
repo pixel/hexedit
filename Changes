@@ -1,3 +1,11 @@
+september 2005:
+	- version 1.2.11
+	- add --enable-colors to build and have a colored (fruit salad) display 
+	- allow entering goto "position" and "sector" in hexadecimal or not
+	- when prompting, propose previously entered value, and give ability to modify it
+	- fix setting mark after scrolling
+	- some cleanup
+
 may 2004:
 	- version 1.2.10
 	- handle getnstr() not defined (needed for SGI IRIX 6.5.22)

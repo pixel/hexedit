@@ -74,7 +74,7 @@ void yank_to_a_file(void)
 
   if (copyBuffer == NULL) { displayMessageAndWaitForKey("Nothing to paste"); return; }
 
-  if (!displayMessageAndGetString("File name (", &lastYankToAFile, tmp, sizeof(tmp))) return;
+  if (!displayMessageAndGetString("File name: ", &lastYankToAFile, tmp, sizeof(tmp))) return;
   
   if ((f = open(tmp, O_RDONLY)) != -1) {
     close(f);
@@ -91,9 +91,10 @@ void yank_to_a_file(void)
 
 void fill_with_string(void)
 {
-  char *msg = hexOrAscii ? "Hexa string to fill with: (" : "Ascii string to fill with: (";
+  char *msg = hexOrAscii ? "Hexa string to fill with: " : "Ascii string to fill with: ";
   char **last = hexOrAscii ? &lastFillWithStringHexa : &lastFillWithStringAscii;
-  char *tmp1, tmp2[BLOCK_SEARCH_SIZE];
+  char tmp2[BLOCK_SEARCH_SIZE];
+  unsigned char *tmp1;
   int i, l1, l2;
 
   if (!mark_set) return;
