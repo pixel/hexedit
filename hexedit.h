@@ -58,16 +58,16 @@
 /*******************************************************************************/
 /* Configuration parameters */
 /*******************************************************************************/
-typedef enum { bySector, maximized, helpOption, LAST } optionType;
+typedef enum { bySector, maximized, LAST } modeType;
 typedef struct {
   int blocSize, lineLength, page;
-  char *shortOptionName, *longOptionName;
-} optionParams;
+} modeParams;
 
-extern optionParams options[LAST];
-extern optionType option;
+extern modeParams modes[LAST];
+extern modeType mode;
+extern int colored;
+extern char *usage;
 
-#define usage "usage: %s [-s | --sector] [-m | --maximize] [-h | --help] filename\n"
 #define pressAnyKey "(press any key)"
 
 

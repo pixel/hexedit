@@ -112,7 +112,7 @@ static void end_of_buffer(void)
 {
   INT s = getfilesize();
   cursorOffset = 0;
-  if (option == bySector) set_base(myfloor(s, page));
+  if (mode == bySector) set_base(myfloor(s, page));
   set_cursor(s);
 }
 
@@ -449,7 +449,7 @@ int key_to_function(int key)
     case '\n':
     case '\r':
     case KEY_ENTER:
-      if (option == bySector) goto_sector(); else goto_char();
+      if (mode == bySector) goto_sector(); else goto_char();
       break;
 
     case CTRL('W'):

@@ -1,10 +1,10 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
-/* Define if you want a colored (fruit salad) display */
-#undef ENABLE_COLORS
-
 /* Define to 1 if you have the `basename' function. */
 #undef HAVE_BASENAME
+
+/* "Define if you want colored (fruit salad) display option" */
+#undef HAVE_COLORS
 
 /* Define to 1 if you have the declaration of `basename', and to 0 if you
    don't. */

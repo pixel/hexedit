@@ -34,12 +34,18 @@ typePage *edited;
 char *lastFindFile = NULL, *lastYankToAFile = NULL, *lastAskHexString = NULL, *lastAskAsciiString = NULL, *lastFillWithStringHexa = NULL, *lastFillWithStringAscii = NULL;
 
 
-optionParams options[LAST] = {
-  { 8, 16, 256, "-s", "--sector" },
-  { 4, 0, 0, "-m", "--maximize" },
-  { 0, 0, 0, "-h", "--help" },
+modeParams modes[LAST] = {
+  { 8, 16, 256 },
+  { 4, 0, 0 },
 };
-optionType option = maximized;
+modeType mode = maximized;
+int colored = FALSE;
+
+char * usage = "usage: %s [-s | --sector] [-m | --maximize]"
+#ifdef HAVE_COLORS 
+     " [--color]"
+#endif 
+     " [-h | --help] filename\n";
 
 
 /*******************************************************************************/
@@ -53,16 +59,20 @@ int main(int argc, char **argv)
 
   for (; argc > 0; argv++, argc--) 
     {
-      recognized = FALSE;
-      for (i = 0; !recognized && i < LAST; i++) {
-	if (streq(*argv, options[i].shortOptionName) || 
-	    streq(*argv, options[i].longOptionName)) {
-	  if (i == helpOption) DIE(usage);
-	  option = i;
-	  recognized = TRUE;
-	}
-      }
-      if (!recognized) break;
+      if (streq(*argv, "-s") || streq(*argv, "--sector"))
+	mode = bySector;
+      else if (streq(*argv, "-m") || streq(*argv, "--maximize"))
+	mode = maximized;
+#ifdef HAVE_COLORS
+      else if (streq(*argv, "--color"))
+	colored = TRUE;
+#endif
+      else if (streq(*argv, "--")) {
+	argv++; argc--;
+	break;
+      } else if (*argv[0] == '-')
+	DIE(usage)
+      else break;
     }
   if (argc > 1) DIE(usage);
 

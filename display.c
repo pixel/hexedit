@@ -52,7 +52,7 @@ int set_cursor(INT loc)
 
 int move_base(INT delta)
 {
-  if (option == bySector) {
+  if (mode == bySector) {
     if (delta > 0 && delta < page)
       delta = page;
     else if (delta < 0 && delta > -page)
@@ -69,7 +69,7 @@ int set_base(INT loc)
   base = loc;
   readFile();
 
-  if (option != bySector && nbBytes < page - lineLength && base != 0) {
+  if (mode != bySector && nbBytes < page - lineLength && base != 0) {
     base -= myfloor(page - nbBytes - lineLength, lineLength);
     if (base < 0) base = 0;
     readFile();
@@ -103,29 +103,33 @@ int computeCursorXPos(int cursor, int hexOrAscii)
 void initCurses(void)
 {
   initscr();
-#ifdef ENABLE_COLORS
-  start_color();
-  use_default_colors();
-  init_pair(1, COLOR_RED, -1);   /* null zeros */
-  init_pair(2, COLOR_GREEN, -1); /* control chars */
-  init_pair(3, COLOR_BLUE, -1);  /* extended chars */
+
+#ifdef HAVE_COLORS
+  if (colored) {
+    start_color();
+    use_default_colors();
+    init_pair(1, COLOR_RED, -1);   /* null zeros */
+    init_pair(2, COLOR_GREEN, -1); /* control chars */
+    init_pair(3, COLOR_BLUE, -1);  /* extended chars */
+  }
 #endif
+
   refresh();
   raw();
   noecho();
   keypad(stdscr, TRUE);
 
-  if (option == bySector) {
-    lineLength = options[bySector].lineLength;
-    page = options[bySector].page;
+  if (mode == bySector) {
+    lineLength = modes[bySector].lineLength;
+    page = modes[bySector].page;
     page = myfloor((LINES - 1) * lineLength, page);
-    blocSize = options[bySector].blocSize;
+    blocSize = modes[bySector].blocSize;
     if (computeLineSize() > COLS) DIE("%s: term is too small for sectored view (width)\n");
     if (page == 0) DIE("%s: term is too small for sectored view (height)\n");
-  } else { /* option == maximized */
+  } else { /* mode == maximized */
     if (LINES <= 4) DIE("%s: term is too small (height)\n");
 
-    blocSize = options[maximized].blocSize;
+    blocSize = modes[maximized].blocSize;
     for (lineLength = blocSize; computeLineSize() <= COLS; lineLength += blocSize);
     lineLength -= blocSize;
     if (lineLength == 0) DIE("%s: term is too small (width)\n");
@@ -170,7 +174,7 @@ void display(void)
   else i = '-';
   printw("-%c%c  %s       --0x%llX", i, i, baseName, base + cursor);
   if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", getfilesize());
-  if (option == bySector) printw("--sector %d", (base + cursor) / SECTOR_SIZE);
+  if (mode == bySector) printw("--sector %d", (base + cursor) / SECTOR_SIZE);
 
   move(cursor / lineLength, computeCursorXCurrentPos());
 }
@@ -184,8 +188,9 @@ void displayLine(int offset, int max)
     if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "));
     if (i < max) {
       ATTRPRINTW(
-#ifdef ENABLE_COLORS
-		 (buffer[i] == 0 ? COLOR_PAIR(1) :
+#ifdef HAVE_COLORS
+		 (!colored ? 0 :
+		  buffer[i] == 0 ? COLOR_PAIR(1) :
 		  buffer[i] < ' ' ? COLOR_PAIR(2) : 
 		  buffer[i] >= 127 ? COLOR_PAIR(3) : 0) |
 #endif
