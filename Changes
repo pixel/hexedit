@@ -1,0 +1,122 @@
+june 2002:
+	- version 1.2.3
+	- add some KEY_HOME KEY_END (^[[7~ and ^[[8~)
+	- fix for HAVE_MEMMEM
+	- fix my memrchr not behaving the same as libc's
+	- fix the use of memrchr to behave as libc's
+	- use "(void)" in prototype of functions having no parameters
+	- call "raw()" when help() is over
+
+october 2001:
+	- version 1.2.2
+	- yet again some s/int/INT/ (mainly in the "edited" list manipulation)
+
+june 2001:
+	- version 1.2.1
+	- replace llseek with lseek + use of _FILE_OFFSET_BITS=64
+	- memrchr&memmem now exists in some glibc's, so define it only if not provided
+	- cleanup basename declaration
+	- various cleanup in configure.in, now using autoheader
+	- a few bug fixes
+
+april 99: 
+	- version 1.1.1
+	- replaced lots of int by INT which 64bits
+	- replaced lseek by llseek (!! portability=linux :( !!)
+
+11 january 99: (:-<>, it's been a long time)
+
+	- added many shortcuts so that F1..F12 and some others works on more
+	terms (xterm, rxvt, sgi's winterm...)
+	- removed the scanw that's badly handled on sgi (replaced by getstr +
+	sscanf)
+
+24 septembre 98: now displays the reached offset while searching
+
+10 september 98: hexedit 1.0.0 release
+
+08 september 98: Oliver Kiddle's <opk@thoth.u-net.com> changes:
+	- changed code where a function that returns a void was returning the
+          result of another function. This avoids errors in stricter compilers
+	- used an if where ?: was being used to the left of an assignment
+	- created Makefile.in and configure.in to replace Makefile
+        - added alternative strdup, strerror and memcmp for lacking systems 
+
+26 august 98: hexedit 0.9.5 release
+
+26 august 98: removed the total file size in modeline for devices
+
+19 august 98: Evin Robertson's changes:
+	- split hexedit.c into display.c, file.c, hexedit.c, hexedit.h,
+	  interact.c, mark.c, misc.c, page.c, search.c
+	- Makefile changes - now defaults to installing in /usr/local/bin
+	- scrolls one line at a time (but not in sector mode)
+	- allow appending to the file
+	- errors during writing are now non-fatal
+	- show total file size in modeline (not really correct for devices)
+	- gives better error messages when functions return -1
+	- added newlines to the end of fatal error messages
+	- changed sizeof(bufferAttr) to sizeof(*bufferAttr)
+	- grammatical corrections to the man page
+	- removed dashes so the display is 16 bytes wide on an 80 column
+	  screen
+	- backspace now moves back an entire byte in hex mode (I thought the
+	  previous behavior was inconsistent; it moved the cursor one
+	  nybble, but undid an entire byte)
+	- refuse to open directories
+	- disallow using return to go past the end of the file
+	- added truncating ability (M-T)
+
+07 august 98: ability to fill the selection with a string
+
+06 august 98: forgot to mark all the things while doing them. Here is a list of
+	what's been added:
+
+	- make the display start at the current cursor position
+	- go to a sector when in --sector mode
+	- added a modeline
+	- ability to open another file. Nice for copy&paste between files
+	- you're no more forced to save the file per page. This means the
+	cut&paste can now always be undone. It's much simplier that way (idea
+	from Evin C Robertson, thanks)
+	- the backspace acts as a small undo of the previous character. It's
+	nice when typing (another idea from Evin C Robertson)
+	- the modified-unmodified bytes are not shown in bold (eg: you replace
+	'a' by 'a')
+
+26 july 98: added a TODO file
+
+26 july 98: added save copied region in a file
+
+26 july 98: added search backward
+
+25 july 98: added copy&paste functions
+
+25 july 98: you can now select a part of the buffer
+
+21 july 98: modified bytes are shown in bold.
+
+21 july 98: corrected a bug, when you call function goto_char and the file is
+	modified, you're now asked if you want to save (before that the changes
+	were lost). You're only asked if the goto_char gets you to a different
+	page of the file.
+
+21 july 98: replace the searchInBuffer function by memmem. Then replaced memmem
+	by mymemmem to counter the libc bug. All this permits a good speedup
+	when searching.
+
+21 july 98: removed the bug in the goto_char function. Now giving an empty
+	string leaves the cursor unmoved. A small bug remains if you give an
+	invalid hexadecimal string starting legally. The scanw(3ncurses)
+	function returns a number corresponding at the legal beginning substring
+	(eg: 1z2 becomes 1).
+
+21 july 98: added an install entry in the Makefile (the one Robert Woodcock
+	<rcw@oz.net> made for the debian package, thanks Robert Woodcock).
+
+21 july 98: creation of the Changes file
+
+
+
+
+

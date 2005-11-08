@@ -1,0 +1,47 @@
+dnl Autoconfigure input file for hexedit
+dnl
+dnl Process this file with autoconf to produce a configure script.
+dnl
+
+AC_INIT(hexedit.c)
+
+define(TheVERSION, 1.1.1)
+
+PRODUCT=hexedit
+VERSION=TheVERSION
+INCL=hexedit.h
+SRCS="hexedit.c display.c mark.c page.c file.c interact.c misc.c search.c"
+OTHER="COPYING Changes TODO install-sh configure hexedit.1 hexedit-TheVERSION.lsm Makefile.in configure.in Makefile-build.in"
+AC_SUBST(PRODUCT)
+AC_SUBST(VERSION)
+AC_SUBST(INCL)
+AC_SUBST(SRCS)
+AC_SUBST(OTHER)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+
+dnl Checks for libraries.
+AC_CHECK_LIB(curses, initscr, LIBS="$LIBS -lcurses",
+AC_CHECK_LIB(ncurses, initscr, LIBS="$LIBS -lncurses"))
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(fcntl.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(memcmp strdup strerror basename)
+if test $ac_cv_func_basename = no; then
+  # basename not in the default libraries. See if it's elsewhere
+  AC_CHECK_LIB(gen, basename, [AC_DEFINE(HAVE_BASENAME)
+    AC_CHECK_HEADERS(libgen.h)
+    LIBS="$LIBS -lgen"])
+fi
+
+AC_OUTPUT(Makefile Makefile-build)

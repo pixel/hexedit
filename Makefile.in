@@ -1,0 +1,45 @@
+# Makefile for hexedit
+
+PRODUCT = @PRODUCT@
+VERSION = @VERSION@
+
+SHELL = /bin/sh
+
+CC = @CC@
+CFLAGS = @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+DEFS = @DEFS@
+INSTALL = @INSTALL@
+
+# Installation directories
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+mandir = @mandir@/man1
+bindir = @bindir@
+
+INCL = @INCL@
+SRCS = @SRCS@
+OBJS = $(SRCS:.c=.o)
+
+.SUFFIXES: .c .o
+
+.c.o:
+	$(CC) $(DEFS) $(CFLAGS) -c $<
+
+all: $(PRODUCT)
+
+$(PRODUCT): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+clean:
+	rm -f *~ *.o core $(PRODUCT)
+
+distclean: clean
+	rm -f Makefile config.cache config.status config.log
+
+install: $(PRODUCT)
+	$(INSTALL) -d -m 755 $(bindir)
+	$(INSTALL) -s -m 755 $(PRODUCT) $(bindir)
+	$(INSTALL) -d -m 755 $(mandir)
+	$(INSTALL) -m 644 $(PRODUCT).1 $(mandir)
