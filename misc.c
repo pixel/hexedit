@@ -120,6 +120,8 @@ char *mymemmem(char *a, int sizea, char *b, int sizeb)
 #else
   char *p;
   int i = sizea - sizeb + 1;
+
+  if (i <= 0) return NULL;
   
   for (; (p = memchr(a, b[0], i)); i -= p - a + 1, a = p + 1)
   {
@@ -138,6 +140,8 @@ char *mymemrmem(char *a, int sizea, char *b, int sizeb)
 #else
   char *p;
   int i = sizea - sizeb + 1;
+
+  if (i <= 0) return NULL;
   
   a += sizea - 1;
   for (; (p = memrchr(a - i + 1, b[sizeb - 1], i)); i -= a - p + 1, a = p - 1)

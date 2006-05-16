@@ -1,3 +1,5 @@
+	- fix a small issue in mymemmem/mymemrmem when HAVE_MEMMEM/HAVE_MEMRMEM is not defined
+
 september 2005:
 	- version 1.2.12
 	- colored (fruit salad) display built by default (if use_default_colors available), 
