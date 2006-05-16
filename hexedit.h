@@ -42,8 +42,12 @@
 #define ALT(c) ((c) | 0xa0)
 #define DIE(M) { fprintf(stderr, M, progName); exit(1); }
 #define FREE(p) if (p) free(p)
+#ifndef MIN
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+#ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
 #define NORMAL A_NORMAL
 #define MARKED A_REVERSE
 #define MODIFIED A_BOLD
