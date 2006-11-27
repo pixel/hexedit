@@ -1,0 +1,21 @@
+Begin3
+Title:          hexedit
+Version:        TheVERSION
+Entered-date:   10SEP98
+Description: 	view and edit files in hexadecimal or in ASCII.
+		hexedit shows a file both in ASCII and in hexadecimal. 
+		The file can be a device as the file is not whole read. 
+		You can modify the file and search through it.
+		You have also copy&paste and save to file functions.
+		Truncating or appending to the file.
+		Modifications are shown in bold.
+Keywords:       hex binary file editor 
+Author:         pixel@rigaux.org (Pixel)
+Maintained-by:  pixel@rigaux.org (Pixel)
+Primary-site:   sunsite.unc.edu /pub/Linux/utils/file/hex
+                39kB hexedit-VERSION.src.tgz
+		14kB hexedit-VERSION.bin.i386.dynamic.tgz
+Original-site:  rigaux.org /
+Platforms:      Linux Unix SunOS Solaris SGI curses
+Copying-policy: GPL
+End
