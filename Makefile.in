@@ -7,6 +7,7 @@ SHELL = /bin/sh
 
 CC = @CC@
 CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
 
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
@@ -26,7 +27,7 @@ OBJS = $(SRCS:.c=.o)
 .SUFFIXES: .c .o
 
 .c.o:
-	$(CC) $(DEFS) $(CFLAGS) -c $<
+	$(CC) $(DEFS) $(CFLAGS) $(CPPFLAGS) -c $<
 
 all: $(PRODUCT)
 
