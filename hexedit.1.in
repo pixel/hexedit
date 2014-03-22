@@ -3,7 +3,7 @@
 hexedit \- view and edit files in hexadecimal or in ASCII
 .SH SYNOPSIS
 .I hexedit
-[\-s | \-\-sector] [\-m | \-\-maximize] [\-h | \-\-help] [filename]
+[\-s | \-\-sector] [\-m | \-\-maximize] [\-l<n> | \-\-linelength <n>] [\-h | \-\-help] [filename]
 .SH DESCRIPTION
 .LP
 .I hexedit
@@ -20,6 +20,9 @@ Try to maximize the display.
 .I "\-\-color"
 Display colors.
 This feature is only available if your operating system supports it.
+.TP
+.I "\-l<n>, \-\-linelength <n>"
+Explicitly set the number of bytes to display per line to <n>.
 .TP
 .I "\-h, \-\-help"
 Show the usage.
