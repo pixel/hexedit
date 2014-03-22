@@ -130,10 +130,14 @@ void initCurses(void)
     if (LINES <= 4) DIE("%s: term is too small (height)\n");
 
     blocSize = modes[maximized].blocSize;
-    for (lineLength = blocSize; computeLineSize() <= COLS; lineLength += blocSize);
-    lineLength -= blocSize;
-    if (lineLength == 0) DIE("%s: term is too small (width)\n");
-
+    if (lineLength == 0) {
+      for (lineLength = blocSize; computeLineSize() <= COLS; lineLength += blocSize);
+      lineLength -= blocSize;
+      if (lineLength == 0) DIE("%s: term is too small (width)\n");
+    } else {
+      if (computeLineSize() > COLS)
+	DIE("%s: term is too small (width) for selected line length\n");
+    }
     page = lineLength * (LINES - 1);
   }
   colsUsed = computeLineSize();

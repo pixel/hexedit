@@ -41,7 +41,7 @@ modeParams modes[LAST] = {
 modeType mode = maximized;
 int colored = FALSE;
 
-char * usage = "usage: %s [-s | --sector] [-m | --maximize]"
+char * usage = "usage: %s [-s | --sector] [-m | --maximize] [-l<n> | --linelength <n>]"
 #ifdef HAVE_COLORS 
      " [--color]"
 #endif 
@@ -60,13 +60,22 @@ int main(int argc, char **argv)
     {
       if (streq(*argv, "-s") || streq(*argv, "--sector"))
 	mode = bySector;
-      else if (streq(*argv, "-m") || streq(*argv, "--maximize"))
+      else if (streq(*argv, "-m") || streq(*argv, "--maximize")) {
 	mode = maximized;
+	lineLength = 0;
+      }
 #ifdef HAVE_COLORS
       else if (streq(*argv, "--color"))
 	colored = TRUE;
 #endif
-      else if (streq(*argv, "--")) {
+      else if (strbeginswith(*argv, "-l") || strbeginswith(*argv, "--linelength")) {
+	if (strbeginswith(*argv, "-l") && strlen(*argv) > 2)
+	  lineLength = atoi(*argv + 2);
+	else {
+	  argv++; argc--;
+	  lineLength = atoi(*argv);
+	}
+      } else if (streq(*argv, "--")) {
 	argv++; argc--;
 	break;
       } else if (*argv[0] == '-')
