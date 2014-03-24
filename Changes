@@ -1,3 +1,7 @@
+march 2014:
+	- fix small but in DIE() which was leaving the terminal in a bad state
+	- added --linelength <n> / -l<n> command line option
+
 february 2013:
 	- fix displaying sector number when above 2^31
 	- fix potential file descriptor leak (thanks to Rich Burridge)
