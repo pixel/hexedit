@@ -131,6 +131,7 @@ void initCurses(void)
 
     blocSize = modes[maximized].blocSize;
     if (lineLength == 0) {
+      /* put as many "blocSize" as can fit on a line */
       for (lineLength = blocSize; computeLineSize() <= COLS; lineLength += blocSize);
       lineLength -= blocSize;
       if (lineLength == 0) DIE("%s: term is too small (width)\n");
