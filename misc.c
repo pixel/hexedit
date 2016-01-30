@@ -156,20 +156,25 @@ char *mymemrmem(char *a, int sizea, char *b, int sizeb)
 int hexStringToBinString(char *p, int *l)
 {
   int i;
+  int j;
 
-  for (i = 0; i < *l; i++) {
+  for (i = 0, j = 0; i < *l; i++, j++) {
+    if( isspace(p[i]) ) {
+      j--;
+      continue;
+    }
     if (!isxdigit(p[i])) {
       displayMessageAndWaitForKey("Invalid hexa string");
       return FALSE;
     }
-    p[i / 2] = ((i % 2) ? setLowBits : setHighBits)(p[i / 2], hexCharToInt(p[i]));
+    p[j / 2] = ((j % 2) ? setLowBits : setHighBits)(p[j / 2], hexCharToInt(p[i]));
   }
 
-  if ((*l % 2)) {
+  if ((j % 2)) {
     displayMessageAndWaitForKey("Must be an even number of chars");
     return FALSE;
   }
-  *l /= 2;
+  *l = j / 2;
   return TRUE;
 }
 
