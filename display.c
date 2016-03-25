@@ -112,6 +112,7 @@ void initCurses(void)
     init_pair(2, COLOR_GREEN, -1); /* control chars */
     init_pair(3, COLOR_BLUE, -1);  /* extended chars */
   }
+  init_pair(4, COLOR_BLUE, COLOR_YELLOW); /* current cursor position*/
 #endif
 
   refresh();
@@ -186,8 +187,10 @@ void display(void)
 
 void displayLine(int offset, int max)
 {
-  int i;
-
+  int i,mark_color=0;
+#ifdef HAVE_COLORS
+  mark_color = COLOR_PAIR(4) | A_BOLD;
+#endif
   PRINTW(("%08lX   ", (int) (base + offset)));
   for (i = offset; i < offset + lineLength; i++) {
     if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "));
@@ -195,9 +198,11 @@ void displayLine(int offset, int max)
       ATTRPRINTW(
 #ifdef HAVE_COLORS
 		 (!colored ? 0 :
+      (cursor == i && hexOrAscii == 0 ? mark_color :
 		  buffer[i] == 0 ? COLOR_PAIR(1) :
 		  buffer[i] < ' ' ? COLOR_PAIR(2) : 
-		  buffer[i] >= 127 ? COLOR_PAIR(3) : 0) |
+		  buffer[i] >= 127 ? COLOR_PAIR(3) : 0)
+      ) |
 #endif
 		 bufferAttr[i], ("%02X", buffer[i]));
     }
@@ -206,8 +211,8 @@ void displayLine(int offset, int max)
   PRINTW(("  "));
   for (i = offset; i < offset + lineLength; i++) {
     if (i >= max) PRINTW((" "));
-    else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW(bufferAttr[i], ("%c", buffer[i]));
-    else ATTRPRINTW(bufferAttr[i], ("."));
+    else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW((cursor == i && hexOrAscii==1 ? mark_color : 0) | bufferAttr[i], ("%c", buffer[i]));
+    else ATTRPRINTW((cursor == i && hexOrAscii == 1 ? mark_color : 0) | bufferAttr[i], ("."));
   }
 }
 
