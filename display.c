@@ -113,6 +113,7 @@ void initCurses(void)
     init_pair(3, COLOR_BLUE, -1);  /* extended chars */
   }
   init_pair(4, COLOR_BLUE, COLOR_YELLOW); /* current cursor position*/
+  init_pair(5, COLOR_WHITE, COLOR_RED); /* color for marking different bytes */
 #endif
 
   refresh();
@@ -144,6 +145,8 @@ void initCurses(void)
   }
   colsUsed = computeLineSize();
   buffer = malloc(page);
+  if(difffileName && *difffileName!='\0')
+    diffBuffer = malloc(page);
   bufferAttr = malloc(page * sizeof(*bufferAttr));
 }
 
@@ -182,26 +185,32 @@ void display(void)
   if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", getfilesize());
   if (mode == bySector) printw("--sector %lld", (base + cursor) / SECTOR_SIZE);
 
+  if (difffileName && *difffileName != '\0')
+  printw("   DIFF: 0x%02X - 0x%02X <- %s ", buffer[cursor], diffBuffer[cursor], difffileName);
   move(cursor / lineLength, computeCursorXCurrentPos());
 }
 
 void displayLine(int offset, int max)
 {
-  int i,mark_color=0;
+  int i,mark_color=0,diff_color=0;
+  bool differs = FALSE;
 #ifdef HAVE_COLORS
   mark_color = COLOR_PAIR(4) | A_BOLD;
+  diff_color = COLOR_PAIR(5) | A_BOLD;
 #endif
   PRINTW(("%08lX   ", (int) (base + offset)));
   for (i = offset; i < offset + lineLength; i++) {
     if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "));
     if (i < max) {
+      differs = difffileName && *difffileName != '\0' && buffer[i] != diffBuffer[i];
       ATTRPRINTW(
 #ifdef HAVE_COLORS
 		 (!colored ? 0 :
       (cursor == i && hexOrAscii == 0 ? mark_color :
+      (differs ? diff_color :
 		  buffer[i] == 0 ? COLOR_PAIR(1) :
 		  buffer[i] < ' ' ? COLOR_PAIR(2) : 
-		  buffer[i] >= 127 ? COLOR_PAIR(3) : 0)
+		  buffer[i] >= 127 ? COLOR_PAIR(3) : 0))
       ) |
 #endif
 		 bufferAttr[i], ("%02X", buffer[i]));
@@ -210,9 +219,10 @@ void displayLine(int offset, int max)
   }
   PRINTW(("  "));
   for (i = offset; i < offset + lineLength; i++) {
+    differs = difffileName && *difffileName != '\0' && buffer[i] != diffBuffer[i];
     if (i >= max) PRINTW((" "));
-    else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW((cursor == i && hexOrAscii==1 ? mark_color : 0) | bufferAttr[i], ("%c", buffer[i]));
-    else ATTRPRINTW((cursor == i && hexOrAscii == 1 ? mark_color : 0) | bufferAttr[i], ("."));
+    else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW((cursor == i && hexOrAscii==1 ? mark_color : differs ? diff_color : 0) | bufferAttr[i], ("%c", buffer[i]));
+    else ATTRPRINTW((cursor == i && hexOrAscii == 1 ? mark_color : differs ? diff_color : 0) | bufferAttr[i], ("."));
   }
 }
 
