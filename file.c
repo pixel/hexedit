@@ -55,6 +55,38 @@ void openFile(void)
   biggestLoc = fileSize;
 }
 
+void openDiffFile(void) {
+  struct stat st;
+
+  if (!is_file(difffileName)) {
+    fprintf(stderr, "%s: %s: Not a file.\n", progName, difffileName);
+    exit(1);
+  }
+
+  if ((difffd = open(difffileName, O_RDONLY)) == -1) {
+    if (page)
+      exitCurses();
+    if (difffileName[0] == '-')
+      DIE(usage);
+    fprintf(stderr, "%s: ", progName);
+    perror(difffileName);
+    exit(1);
+  }
+
+  if (fstat(difffd, &st) != -1 && st.st_size > 0)
+    diffFileSize = st.st_size;
+  else {
+#ifdef BLKGETSIZE
+    unsigned long i;
+    if (ioctl(difffd, BLKGETSIZE, &i) == 0)
+      diffFileSize = (INT)i * 512;
+    else
+#endif
+      diffFileSize = 0;
+  }
+}
+
+
 void readFile(void)
 {
   typePage *p;
@@ -82,7 +114,18 @@ void readFile(void)
     }
   }
   if (mark_set) markSelectedRegion();
+  if(difffileName && *difffileName != '\0')
+    readDiffFile();
+}
 
+void readDiffFile(void) {
+  typePage *p;
+  INT i;
+
+  memset(diffBuffer, 0, page * sizeof(*diffBuffer));
+
+  LSEEK(difffd, base);
+  diffnbBytes = read(difffd, diffBuffer, page);
 }
 
 int findFile(void)

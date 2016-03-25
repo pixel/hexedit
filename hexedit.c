@@ -29,6 +29,13 @@ int isReadOnly, fd, nbBytes, oldcursor, oldattr, oldcursorOffset;
 int sizeCopyBuffer, *bufferAttr;
 char *progName, *fileName, *baseName;
 unsigned char *buffer, *copyBuffer;
+
+unsigned char *diffBuffer;
+char *difffileName;
+INT diffFileSize;
+int difffd, diffnbBytes;
+
+
 typePage *edited;
 
 char *lastFindFile = NULL, *lastYankToAFile = NULL, *lastAskHexString = NULL, *lastAskAsciiString = NULL, *lastFillWithStringHexa = NULL, *lastFillWithStringAscii = NULL;
@@ -45,7 +52,8 @@ char * usage = "usage: %s [-s | --sector] [-m | --maximize] [-l<n> | --linelengt
 #ifdef HAVE_COLORS 
      " [--color]"
 #endif 
-     " [-h | --help] filename\n";
+     " [-h | --help] filename[ diffWithFile]\n"
+    "If you want mark differences between two files specify diffWithFile - only with --color\n";
 
 
 /*******************************************************************************/
@@ -56,7 +64,7 @@ int main(int argc, char **argv)
   progName = basename(argv[0]);
   argv++; argc--;
 
-  for (; argc > 0; argv++, argc--) 
+  for (; argc > 0; argv++, argc--)
     {
       if (streq(*argv, "-s") || streq(*argv, "--sector"))
 	mode = bySector;
@@ -83,13 +91,17 @@ int main(int argc, char **argv)
 	DIE(usage)
       else break;
     }
-  if (argc > 1) DIE(usage);
+  if (argc < 1) DIE(usage);
 
   init();
-  if (argc == 1) {
-    fileName = strdup(*argv); 
-    openFile();
+  fileName = strdup(*argv);
+  argv++; argc--;
+  openFile();
+  if(argc == 1){
+    difffileName = strdup(*argv);
+    openDiffFile();
   }
+
   initCurses();
   if (fileName == NULL) {
     if (!findFile()) {
