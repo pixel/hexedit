@@ -225,9 +225,7 @@ You can find
 .I hexedit
 at 
 .br
-<http://rigaux.org/hexedit-VERSION.src.tgz> and 
-.br
-<http://rigaux.org/hexedit-VERSION.bin.i386.dynamic.tgz>.
+<https://github.com/pixel/hexedit/archive/@VERSION@.tar.gz>
 .SH TODO
 Anything you think could be nice...
 .SH LIMITATIONS

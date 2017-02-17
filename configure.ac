@@ -72,4 +72,4 @@ $ac_includes_default
 #endif
 )
 
-AC_OUTPUT(Makefile Makefile-build)
+AC_OUTPUT(Makefile Makefile-build hexedit.1)
