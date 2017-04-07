@@ -153,11 +153,11 @@ void exitCurses(void);
 void display(void);
 void displayLine(int offset, int max);
 void clr_line(int line);
-void displayCentered(char *msg, int line);
-void displayOneLineMessage(char *msg);
-void displayTwoLineMessage(char *msg1, char *msg2);
-void displayMessageAndWaitForKey(char *msg);
-int displayMessageAndGetString(char *msg, char **last, char *p, int p_size);
+void displayCentered(const char *msg, int line);
+void displayOneLineMessage(const char *msg);
+void displayTwoLineMessage(const char *msg1, const char *msg2);
+void displayMessageAndWaitForKey(const char *msg);
+int displayMessageAndGetString(const char *msg, char **last, char *p, int p_size);
 void ungetstr(char *s);
 int get_number(INT *i);
 
