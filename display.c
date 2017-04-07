@@ -100,9 +100,29 @@ int computeCursorXPos(int cursor, int hexOrAscii)
 /*******************************************************************************/
 /* Curses functions */
 /*******************************************************************************/
+static void handleSigWinch(int sig)
+{
+  /*Close and refresh window to get new size*/
+  endwin();
+  refresh();
+
+  /*Reset to trigger recalculation*/
+  lineLength = 0;
+
+  clear();
+  initDisplay();
+  readFile();
+  display();
+}
+
 void initCurses(void)
 {
+  struct sigaction sa;
   initscr();
+
+  memset(&sa, 0, sizeof(struct sigaction));
+  sa.sa_handler = handleSigWinch;
+  sigaction(SIGWINCH, &sa, NULL);
 
 #ifdef HAVE_COLORS
   if (colored) {
@@ -115,6 +135,11 @@ void initCurses(void)
   init_pair(4, COLOR_BLUE, COLOR_YELLOW); /* current cursor position*/
 #endif
 
+  initDisplay();
+}
+
+void initDisplay(void)
+{
   refresh();
   raw();
   noecho();
@@ -138,13 +163,13 @@ void initCurses(void)
       if (lineLength == 0) DIE("%s: term is too small (width)\n");
     } else {
       if (computeLineSize() > COLS)
-	DIE("%s: term is too small (width) for selected line length\n");
+        DIE("%s: term is too small (width) for selected line length\n");
     }
     page = lineLength * (LINES - 1);
   }
   colsUsed = computeLineSize();
-  buffer = malloc(page);
-  bufferAttr = malloc(page * sizeof(*bufferAttr));
+  buffer = realloc(buffer,page);
+  bufferAttr = realloc(bufferAttr,page * sizeof(*bufferAttr));
 }
 
 void exitCurses(void)
