@@ -339,8 +339,12 @@ int key_to_function(int key)
   oldbase = base;
   /*printf("*******%d******\n", key);*/
 
-  switch (key) 
+  switch (key)
     {
+    case ERR:
+      /*no-op*/
+      break;
+
     case KEY_RIGHT:
     case CTRL('F'):
       forward_char();
