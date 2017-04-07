@@ -1,3 +1,5 @@
+	- terminal resizing support
+
 novembre 2016:
 	- mark cursor position in both HEX and ASCII
 	- skip whitespace when parsing hex-strings

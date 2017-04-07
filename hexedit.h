@@ -148,6 +148,7 @@ int set_base(INT loc);
 /* Curses functions declaration */
 /*******************************************************************************/
 void initCurses(void);
+void initDisplay(void);
 void exitCurses(void);
 void display(void);
 void displayLine(int offset, int max);
