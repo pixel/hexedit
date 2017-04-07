@@ -218,14 +218,14 @@ void displayLine(int offset, int max)
 
 void clr_line(int line) { move(line, 0); clrtoeol(); }
 
-void displayCentered(char *msg, int line)
+void displayCentered(const char *msg, int line)
 {
   clr_line(line);
   move(line, (COLS - strlen(msg)) / 2);
   PRINTW(("%s", msg));
 }
 
-void displayOneLineMessage(char *msg)
+void displayOneLineMessage(const char *msg)
 {
   int center = page / lineLength / 2;
   clr_line(center - 1);
@@ -233,7 +233,7 @@ void displayOneLineMessage(char *msg)
   displayCentered(msg, center);
 }
 
-void displayTwoLineMessage(char *msg1, char *msg2)
+void displayTwoLineMessage(const char *msg1, const char *msg2)
 {
   int center = page / lineLength / 2;
   clr_line(center - 2);
@@ -242,13 +242,13 @@ void displayTwoLineMessage(char *msg1, char *msg2)
   displayCentered(msg2, center);
 }
 
-void displayMessageAndWaitForKey(char *msg)
+void displayMessageAndWaitForKey(const char *msg)
 {
   displayTwoLineMessage(msg, pressAnyKey);
   getch();
 }
 
-int displayMessageAndGetString(char *msg, char **last, char *p, int p_size)
+int displayMessageAndGetString(const char *msg, char **last, char *p, int p_size)
 {
   int ret = TRUE;
 
