@@ -13,7 +13,7 @@ define(TheVERSION, 1.3)
 PRODUCT=hexedit
 VERSION=TheVERSION
 INCL=hexedit.h
-SRCS="hexedit.c display.c mark.c page.c file.c interact.c misc.c search.c"
+SRCS="hexedit.c display.c mark.c page.c file.c interact.c misc.c search.c magic.c"
 OTHER="COPYING Changes TODO install-sh configure config.h.in hexedit.1 hexedit-TheVERSION.lsm Makefile.in configure.in Makefile-build.in"
 AC_SUBST(PRODUCT)
 AC_SUBST(VERSION)
@@ -41,6 +41,12 @@ AC_CHECK_LIB(tinfo, keypad, LIBS="$LIBS -ltinfo")
 AC_CHECK_FUNC(use_default_colors, 
   AC_DEFINE(HAVE_COLORS, , "Define if you want colored (fruit salad) display option")
 )
+AC_CHECK_LIB(magic, magic_buffer, LIBS="$LIBS -lmagic")
+#RSA:Could not get these to work:
+#AC_CHECK_FUNC(magic_buffer, 
+#  AC_DEFINE(HAVE_MAGIC, , "Define if you want libmagic display option")
+#)
+#AC_CHECK_LIB(magic, magic_buffer, AC_DEFINE(HAVE_LIBMAGIC))
 
 dnl This test must come as early as possible after the compiler configuration
 dnl tests, because the choice of the file model can (in principle) affect

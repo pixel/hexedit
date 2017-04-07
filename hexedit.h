@@ -2,6 +2,7 @@
 #define HEXEDIT_H
 
 #include "config.h"
+#define HAVE_MAGIC 1 /*hack*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -135,6 +136,12 @@ void removeFromEdited(INT base, int size);
 typePage *newPage(INT base, int size);
 void freePage(typePage *page);
 
+/*******************************************************************************/
+/* Magic handling functions declaration */
+/*******************************************************************************/
+void initMagic(void);
+void evalMagic(void);
+void freeMagic(void);
 
 /*******************************************************************************/
 /* Cursor manipulation function declarations */
