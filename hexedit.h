@@ -67,10 +67,10 @@ typedef struct {
   int blocSize, lineLength, page;
 } modeParams;
 
-extern modeParams modes[LAST];
+extern const modeParams modes[LAST];
 extern modeType mode;
 extern int colored;
-extern char *usage;
+extern const char * const usage;
 
 #define pressAnyKey "(press any key)"
 
