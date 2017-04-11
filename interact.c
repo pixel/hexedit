@@ -16,7 +16,6 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
 #include "hexedit.h"
 
-
 static void goto_char(void);
 static void goto_sector(void);
 static void save_buffer(void);
@@ -327,8 +326,6 @@ static void short_help(void)
   displayMessageAndWaitForKey("Unknown command, press F1 for help");
 }
 
-
-
 /*******************************************************************************/
 /* key_to_function */
 /*******************************************************************************/
@@ -531,6 +528,12 @@ int key_to_function(int key)
       ask_about_save_and_quit();
       break;
 
+	#if HAVE_MAGIC
+    case '?':
+      evalMagic();
+      break;
+	#endif
+
     default:
       if ((key >= 256 || !setTo(key))) firstTimeHelp();
     }
@@ -655,16 +658,16 @@ static void escaped_command(void)
 	goto_char();
 	break;
 
-      default: 
-	firstTimeHelp();
+      default:
+        firstTimeHelp();
       }
     } else firstTimeHelp();
     break;
 
-  case '[': 
+  case '[':
     for (i = 0;; i++) { tmp[i] = c = getch(); if (!isdigit(c)) break; }
     tmp[i + 1] = '\0';
-    
+
     if (0);
     else if (streq(tmp, "2~")) yank();
     else if (streq(tmp, "5~")) scroll_down();

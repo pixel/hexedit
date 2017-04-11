@@ -117,11 +117,17 @@ void init(void)
   hexOrAscii = TRUE;
   copyBuffer = NULL;
   edited = NULL;
+  #if HAVE_MAGIC
+    initMagic();
+  #endif
 }
 
 void quit(void)
 {
-  exitCurses();
+  #if HAVE_MAGIC
+    exitCurses();
+  #endif
+  freeMagic();
   free(fileName);
   free(buffer);
   free(bufferAttr);
