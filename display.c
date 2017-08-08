@@ -205,6 +205,7 @@ void display(void)
   else i = '-';
   printw("-%c%c  %s       --0x%llX", i, i, baseName, base + cursor);
   if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", getfilesize());
+  printw("--%i%%", 100 * (base + cursor + getfilesize()/200) / getfilesize() );
   if (mode == bySector) printw("--sector %lld", (base + cursor) / SECTOR_SIZE);
 
   move(cursor / lineLength, computeCursorXCurrentPos());
