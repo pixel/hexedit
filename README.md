@@ -1,5 +1,5 @@
 To build from git:
 
 ```
-autoreconf -fi && ./configure && make
+./autogen.sh && ./configure && make
 ```
