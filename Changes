@@ -1,4 +1,7 @@
+septembre 2017
+	- 1.4
 	- terminal resizing support
+	- fix build
 
 novembre 2016:
 	- mark cursor position in both HEX and ASCII
