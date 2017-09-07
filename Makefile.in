@@ -42,6 +42,6 @@ distclean: clean
 
 install: $(PRODUCT)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(bindir)
-	$(INSTALL) -s -m 755 $(PRODUCT) $(DESTDIR)$(bindir)
+	$(INSTALL) -m 755 $(PRODUCT) $(DESTDIR)$(bindir)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(mandir)/man1
 	$(INSTALL) -m 644 $(PRODUCT).1 $(DESTDIR)$(mandir)/man1
