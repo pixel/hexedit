@@ -16,6 +16,7 @@ INSTALL = @INSTALL@
 
 # Installation directories
 prefix = @prefix@
+datarootdir = @datarootdir@
 exec_prefix = @exec_prefix@
 mandir = @mandir@
 bindir = @bindir@
@@ -35,10 +36,10 @@ $(PRODUCT): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 
 clean:
-	rm -rf *~ *.o core *.cache config.status config.log $(PRODUCT)
+	rm -rf *~ *.o core *.cache config.status config.log $(PRODUCT) $(PRODUCT).1
 
 distclean: clean
-	rm -f Makefile config.h
+	rm -f Makefile config.h Makefile-build
 
 install: $(PRODUCT)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(bindir)
