@@ -113,7 +113,7 @@ o \fIF1\fR, \fIEsc+H\fR \- help (show the man page).
 .br
 o \fICtrl+O\fR, \fIF3\fR \- open another file
 .br
-o \fICtrl+L\fR \- redisplay (refresh) the display (usefull when your terminal screws up).
+o \fICtrl+L\fR \- redisplay (refresh) the display (useful when your terminal screws up).
 .br
 o \fIBackspace\fR, \fICtrl+H\fR \- undo the modifications made on the previous byte.
 .br
@@ -225,9 +225,7 @@ You can find
 .I hexedit
 at 
 .br
-<http://rigaux.org/hexedit-VERSION.src.tgz> and 
-.br
-<http://rigaux.org/hexedit-VERSION.bin.i386.dynamic.tgz>.
+<https://github.com/pixel/hexedit/archive/@VERSION@.tar.gz>
 .SH TODO
 Anything you think could be nice...
 .SH LIMITATIONS
@@ -247,7 +245,7 @@ The hexadecimal search could be able to search modulo 4 bits instead of 8 bits.
 Another feature could be to complete padd odd length hexadecimal searches with
 zeros.
 .SH BUGS
-I have an example where the display is completly screwed up. It seems to be a
+I have an example where the display is completely screwed up. It seems to be a
 bug in ncurses (or maybe in xterm and rxvt)?? Don't know if it's me using
 ncurses badly or not... It seems to happen when \fIhexedit\fR leaves only one
 space at the end of the lines... If anyone has a (or the) solution, please tell

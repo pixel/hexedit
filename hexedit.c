@@ -41,14 +41,14 @@ typePage *edited;
 char *lastFindFile = NULL, *lastYankToAFile = NULL, *lastAskHexString = NULL, *lastAskAsciiString = NULL, *lastFillWithStringHexa = NULL, *lastFillWithStringAscii = NULL;
 
 
-modeParams modes[LAST] = {
+const modeParams modes[LAST] = {
   { 8, 16, 256 },
   { 4, 0, 0 },
 };
 modeType mode = maximized;
 int colored = FALSE;
 
-char * usage = "usage: %s [-s | --sector] [-m | --maximize] [-l<n> | --linelength <n>]"
+const char * const usage = "usage: %s [-s | --sector] [-m | --maximize] [-l<n> | --linelength <n>]"
 #ifdef HAVE_COLORS 
      " [--color]"
 #endif 

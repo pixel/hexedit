@@ -1,4 +1,15 @@
-january 2016:
+september 2017
+	- 1.4.2
+	- fix spelling errors in manpage
+	- fix build
+
+septembre 2017
+	- 1.4
+	- terminal resizing support
+	- fix build
+
+novembre 2016:
+	- mark cursor position in both HEX and ASCII
 	- skip whitespace when parsing hex-strings
 
 march 2014:

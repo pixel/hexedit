@@ -8,7 +8,7 @@ AC_PREREQ(2.50)
 AC_INIT(hexedit.c)
 AC_CONFIG_HEADERS(config.h)
 
-define(TheVERSION, 1.2.13)
+define(TheVERSION, 1.4.2)
 
 PRODUCT=hexedit
 VERSION=TheVERSION
@@ -35,7 +35,7 @@ AC_PROG_INSTALL
 
 dnl Checks for libraries.
 AC_CHECK_LIB(curses, initscr, LIBS="$LIBS -lcurses",
-  AC_CHECK_LIB(ncurses, initscr, LIBS="$LIBS -lncurses")
+  [AC_CHECK_LIB(ncurses, initscr, LIBS="$LIBS -lncurses")]
 )
 AC_CHECK_LIB(tinfo, keypad, LIBS="$LIBS -ltinfo")
 AC_CHECK_FUNC(use_default_colors, 
@@ -72,4 +72,4 @@ $ac_includes_default
 #endif
 )
 
-AC_OUTPUT(Makefile Makefile-build)
+AC_OUTPUT(Makefile Makefile-build hexedit.1)

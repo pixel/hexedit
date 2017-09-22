@@ -4,6 +4,7 @@ PRODUCT = @PRODUCT@
 VERSION = @VERSION@
 
 prefix = @prefix@
+datarootdir = @datarootdir@
 exec_prefix = @exec_prefix@
 mandir = @mandir@/man1
 bindir = @bindir@
