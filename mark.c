@@ -52,7 +52,6 @@ void copy_region(void)
       INT min = MIN(p->base, mark_min);
       memcpy(copyBuffer + p->base - min, 
 	     p->vals + mark_min - min,
-	     //OML MIN(p->base + p->size, mark_max) - MAX(p->base, mark_min) + 1);
              MIN(MIN(p->base + p->size, mark_max) - MAX(p->base, mark_min) + 1, p->size));
     }
   }
