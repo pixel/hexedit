@@ -166,21 +166,28 @@ void display(void)
   for (; i < page; i += lineLength) {
     int j;
     move(i / lineLength, 0);
-    for (j = 0; j < colsUsed; j++) printw(" "); /* cleanup the line */
+    clrtoeol();
     move(i / lineLength, 0);
     PRINTW(("%08lX", (int) (base + i)));
   }
 
   attrset(NORMAL);
   move(LINES - 1, 0);
-  for (i = 0; i < colsUsed; i++) printw("-");
+  int szBuffer = 100;
+  char buffer[szBuffer];
+  int len = snprintf(buffer, szBuffer, "%08llX", base + i) - 8;
+  for (i = 0; i < colsUsed + len; i++) printw("-");
+  clrtoeol();
   move(LINES - 1, 0);
   if (isReadOnly) i = '%';
   else if (edited) i = '*';
   else i = '-';
-  printw("-%c%c  %s       --0x%llX", i, i, baseName, base + cursor);
+  printw("-%c%c --0x%llX", i, i, base + cursor);
+ 
   if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", getfilesize());
   if (mode == bySector) printw("--sector %lld", (base + cursor) / SECTOR_SIZE);
+
+  printw(" %s", baseName);
 
   move(cursor / lineLength, computeCursorXCurrentPos());
 }
@@ -214,6 +221,8 @@ void displayLine(int offset, int max)
     else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW((cursor == i && hexOrAscii==1 ? mark_color : 0) | bufferAttr[i], ("%c", buffer[i]));
     else ATTRPRINTW((cursor == i && hexOrAscii == 1 ? mark_color : 0) | bufferAttr[i], ("."));
   }
+  PRINTW((" "));
+  clrtoeol();
 }
 
 void clr_line(int line) { move(line, 0); clrtoeol(); }
@@ -253,7 +262,7 @@ int displayMessageAndGetString(char *msg, char **last, char *p, int p_size)
   int ret = TRUE;
 
   displayOneLineMessage(msg);
-  ungetstr(*last);
+  ungetstr(*last, p_size);
   echo();
   getnstr(p, p_size - 1);
   noecho();
@@ -266,11 +275,27 @@ int displayMessageAndGetString(char *msg, char **last, char *p, int p_size)
   return ret;
 }
 
-void ungetstr(char *s)
+void ungetstr(char *s, size_t p_size)
 {
-  char *p;
-  if (s)
-    for (p = s + strlen(s) - 1; p >= s; p--) ungetch(*p);
+  wchar_t ws[p_size];
+  wchar_t *w;
+  bool nonASCII = false;
+
+  if (s) {
+    swprintf(ws, p_size, L"%hs", s);
+    int i;
+    for (i=0; i<wcslen(ws); i++) {
+      if (ws[i] > 127) nonASCII = true;
+    }
+    if ((wcslen(ws) < 137) && (!nonASCII)) {
+      for (w = ws + wcslen(ws) - 1; w >= ws; w--) {
+        if (unget_wch(*w) != OK) {
+          printf("unget_wch ERROR!");
+          break;
+        }
+      }
+    }
+  }
 }
 
 int get_number(INT *i)

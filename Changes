@@ -1,3 +1,12 @@
+september 2018:
+        - Now writes before of filename, file position and file size at status line because if filename is long,
+          user cannot view file position and file size
+        - fix clean filename at end of line after load with F3 when filename reach end of line
+        - fix input long filename (longer than 136 chars) with F3 for next time. It repeats long filename until bottom screen and hangs.
+          Only works CTRL+C. I think that is a bug in ncurses. My work around is to print the long filename (if is longer than 136 chars),
+          but you can't edit it. You can load it pressing the RETURN key
+        - fix copy & paste bytes unchanged between bytes changed. Paste leave bytes unchanged to 00
+
 novembre 2016:
 	- mark cursor position in both HEX and ASCII
 	- skip whitespace when parsing hex-strings

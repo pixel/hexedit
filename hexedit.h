@@ -27,7 +27,6 @@
 #include <sys/mount.h> /* for BLKGETSIZE */
 #endif
 
-
 #define INT off_t
 
 /*******************************************************************************/
@@ -157,7 +156,7 @@ void displayOneLineMessage(char *msg);
 void displayTwoLineMessage(char *msg1, char *msg2);
 void displayMessageAndWaitForKey(char *msg);
 int displayMessageAndGetString(char *msg, char **last, char *p, int p_size);
-void ungetstr(char *s);
+void ungetstr(char *s, size_t p_size);
 int get_number(INT *i);
 
 
