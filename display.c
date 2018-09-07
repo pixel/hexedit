@@ -100,9 +100,29 @@ int computeCursorXPos(int cursor, int hexOrAscii)
 /*******************************************************************************/
 /* Curses functions */
 /*******************************************************************************/
+static void handleSigWinch(int sig)
+{
+  /*Close and refresh window to get new size*/
+  endwin();
+  refresh();
+
+  /*Reset to trigger recalculation*/
+  lineLength = 0;
+
+  clear();
+  initDisplay();
+  readFile();
+  display();
+}
+
 void initCurses(void)
 {
+  struct sigaction sa;
   initscr();
+
+  memset(&sa, 0, sizeof(struct sigaction));
+  sa.sa_handler = handleSigWinch;
+  sigaction(SIGWINCH, &sa, NULL);
 
 #ifdef HAVE_COLORS
   if (colored) {
@@ -115,6 +135,11 @@ void initCurses(void)
   init_pair(4, COLOR_BLUE, COLOR_YELLOW); /* current cursor position*/
 #endif
 
+  initDisplay();
+}
+
+void initDisplay(void)
+{
   refresh();
   raw();
   noecho();
@@ -138,13 +163,13 @@ void initCurses(void)
       if (lineLength == 0) DIE("%s: term is too small (width)\n");
     } else {
       if (computeLineSize() > COLS)
-	DIE("%s: term is too small (width) for selected line length\n");
+        DIE("%s: term is too small (width) for selected line length\n");
     }
     page = lineLength * (LINES - 1);
   }
   colsUsed = computeLineSize();
-  buffer = malloc(page);
-  bufferAttr = malloc(page * sizeof(*bufferAttr));
+  buffer = realloc(buffer,page);
+  bufferAttr = realloc(bufferAttr,page * sizeof(*bufferAttr));
 }
 
 void exitCurses(void)
@@ -227,14 +252,14 @@ void displayLine(int offset, int max)
 
 void clr_line(int line) { move(line, 0); clrtoeol(); }
 
-void displayCentered(char *msg, int line)
+void displayCentered(const char *msg, int line)
 {
   clr_line(line);
   move(line, (COLS - strlen(msg)) / 2);
   PRINTW(("%s", msg));
 }
 
-void displayOneLineMessage(char *msg)
+void displayOneLineMessage(const char *msg)
 {
   int center = page / lineLength / 2;
   clr_line(center - 1);
@@ -242,7 +267,7 @@ void displayOneLineMessage(char *msg)
   displayCentered(msg, center);
 }
 
-void displayTwoLineMessage(char *msg1, char *msg2)
+void displayTwoLineMessage(const char *msg1, const char *msg2)
 {
   int center = page / lineLength / 2;
   clr_line(center - 2);
@@ -251,13 +276,13 @@ void displayTwoLineMessage(char *msg1, char *msg2)
   displayCentered(msg2, center);
 }
 
-void displayMessageAndWaitForKey(char *msg)
+void displayMessageAndWaitForKey(const char *msg)
 {
   displayTwoLineMessage(msg, pressAnyKey);
   getch();
 }
 
-int displayMessageAndGetString(char *msg, char **last, char *p, int p_size)
+int displayMessageAndGetString(const char *msg, char **last, char *p, int p_size)
 {
   int ret = TRUE;
 

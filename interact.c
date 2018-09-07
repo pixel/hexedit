@@ -262,7 +262,7 @@ static void goto_char(void)
   INT i;
 
   displayOneLineMessage("New position ? ");
-  ungetstr("0x");
+  ungetstr("0x", BLOCK_SEARCH_SIZE);
   if (!get_number(&i) || !set_cursor(i)) displayMessageAndWaitForKey("Invalid position!");
 }
 
@@ -339,8 +339,12 @@ int key_to_function(int key)
   oldbase = base;
   /*printf("*******%d******\n", key);*/
 
-  switch (key) 
+  switch (key)
     {
+    case ERR:
+      /*no-op*/
+      break;
+
     case KEY_RIGHT:
     case CTRL('F'):
       forward_char();
