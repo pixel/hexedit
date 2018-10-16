@@ -91,7 +91,7 @@ int findFile(void)
   p = lastFindFile ? strdup(lastFindFile) : NULL;
   if ((p != NULL) && (strlen(p) > 136)) {
     char msg[4097];
-    snprintf(msg, 4096, "File name (RETURN loads %s): ", p);
+    snprintf(msg, 4096, "File name [%s]: ", p);
     int center = page / lineLength / 2;
     int lines = strlen(msg) / COLS;
     if ((strlen(msg) > COLS) && (strlen(msg) % COLS)) lines++;
