@@ -342,6 +342,7 @@ int key_to_function(int key)
   switch (key)
     {
     case ERR:
+    case KEY_RESIZE:
       /*no-op*/
       break;
 
@@ -529,9 +530,6 @@ int key_to_function(int key)
     case KEY_F(10):
     case CTRL('X'):
       ask_about_save_and_quit();
-      break;
-
-    case KEY_RESIZE:
       break;
 
     default:
