@@ -75,6 +75,8 @@ int main(int argc, char **argv)
 	  argv++; argc--;
 	  lineLength = atoi(*argv);
 	}
+	if (lineLength < 0 || lineLength > 4096)
+	  DIE("illegal line length\n")
       } else if (streq(*argv, "--")) {
 	argv++; argc--;
 	break;
