@@ -662,7 +662,7 @@ static void escaped_command(void)
     break;
 
   case '[': 
-    for (i = 0;; i++) { tmp[i] = c = getch(); if (!isdigit(c)) break; }
+    for (i = 0; i < sizeof(tmp) - 1; i++) { tmp[i] = c = getch(); if (!isdigit(c)) break; }
     tmp[i + 1] = '\0';
     
     if (0);
