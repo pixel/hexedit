@@ -342,6 +342,7 @@ int key_to_function(int key)
   switch (key)
     {
     case ERR:
+    case KEY_RESIZE:
       /*no-op*/
       break;
 
