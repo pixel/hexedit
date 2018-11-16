@@ -531,6 +531,9 @@ int key_to_function(int key)
       ask_about_save_and_quit();
       break;
 
+    case KEY_RESIZE:
+      break;
+
     default:
       if ((key >= 256 || !setTo(key))) firstTimeHelp();
     }
