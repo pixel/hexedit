@@ -225,9 +225,9 @@ void displayLine(int offset, int max)
 #ifdef HAVE_COLORS
 		 (!colored ? 0 :
       (cursor == i && hexOrAscii == 0 ? mark_color :
-		  buffer[i] == 0 ? COLOR_PAIR(1) :
-		  buffer[i] < ' ' ? COLOR_PAIR(2) : 
-		  buffer[i] >= 127 ? COLOR_PAIR(3) : 0)
+		  buffer[i] == 0 ? (int) COLOR_PAIR(1) :
+		  buffer[i] < ' ' ? (int) COLOR_PAIR(2) :
+		  buffer[i] >= 127 ? (int) COLOR_PAIR(3) : 0)
       ) |
 #endif
 		 bufferAttr[i], ("%02X", buffer[i]));
