@@ -203,10 +203,10 @@ void display(void)
   if (isReadOnly) i = '%';
   else if (edited) i = '*';
   else i = '-';
-  printw("-%c%c  %s       --0x%llX", i, i, baseName, base + cursor);
-  if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", getfilesize());
+  printw("-%c%c  %s       --0x%llX", i, i, baseName, (long long) base + cursor);
+  if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", (long long) getfilesize());
   printw("--%i%%", 100 * (base + cursor + getfilesize()/200) / getfilesize() );
-  if (mode == bySector) printw("--sector %lld", (base + cursor) / SECTOR_SIZE);
+  if (mode == bySector) printw("--sector %lld", (long long) ((base + cursor) / SECTOR_SIZE));
 
   move(cursor / lineLength, computeCursorXCurrentPos());
 }
@@ -301,14 +301,18 @@ void ungetstr(char *s)
 
 int get_number(INT *i)
 {
+  unsigned long long n;
   int err;
   char tmp[BLOCK_SEARCH_SIZE];
   echo();
   getnstr(tmp, BLOCK_SEARCH_SIZE - 1);
   noecho();
   if (strbeginswith(tmp, "0x"))
-    err = sscanf(tmp + strlen("0x"), "%llx", i);
+    err = sscanf(tmp + strlen("0x"), "%llx", &n);
   else
-    err = sscanf(tmp, "%lld", i);
+    err = sscanf(tmp, "%llu", &n);
+  *i = (off_t)n;
+  if (*i < 0 || n != (unsigned long long) *i)
+    err = 0;
   return err == 1;
 }
