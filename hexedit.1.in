@@ -150,7 +150,7 @@ While in --sector mode, it shows the sector the cursor is in.
 .SS Editing
 You can edit in ASCII or in hexadecimal. You can switch between the two with
 \fITab\fR. When the file is read-only, you can't edit it. When trying to edit a
-read-only file, a message (```File is read-only''') tells you it is non-writable.
+read-only file, a message "File is read-only" tells you it is non-writable.
 .br
 The modifications are shown in bold until they are saved.
 The modeline indicates whether you have modified the file or not.
@@ -167,8 +167,8 @@ by \fIhexedit\fR (like emacs' quoted-insert, or like the \\ character in C).
 .SS Searching
 You can search for a string in ASCII or in hexadecimal. You can switch
 between the two with \fITab\fR. If the string is found, the cursor is moved to
-the beginning of the matching location. If the search failed, a message (```not
-found''') tells you so. You can cancel the search by pressing a key.
+the beginning of the matching location. If the search failed, a message "not found"
+tells you so. You can cancel the search by pressing a key.
 .br
 The search in hexadecimal is a bit confusing. You must give a hexadecimal string
 with an even number of characters. The search can then be done byte by byte. If
