@@ -89,7 +89,22 @@ int findFile(void)
 {
   char *p, tmp[BLOCK_SEARCH_SIZE];
   p = lastFindFile ? strdup(lastFindFile) : NULL;
-  if (!displayMessageAndGetString("File name: ", &p, tmp, sizeof(tmp))) return FALSE;
+  if ((p != NULL) && (strlen(p) > 136)) {
+    char msg[4097];
+    snprintf(msg, 4096, "File name [%s]: ", p);
+    int center = page / lineLength / 2;
+    int lines = strlen(msg) / COLS;
+    if ((strlen(msg) > COLS) && (strlen(msg) % COLS)) lines++;
+    if ((strlen(msg) % COLS) > (int)(COLS * 0.8)) lines++;
+    if ((strlen(msg) % COLS) > (int)(COLS * 0.8) && (strlen(msg) < COLS)) lines++;
+    if (strlen(msg) == COLS) lines++;
+    for (int i = 2; i < lines + 1; i++) {
+      clr_line(center + i);
+    }
+    if (!displayMessageAndGetString(msg, &p, tmp, sizeof(tmp))) return FALSE;
+  } else {
+    if (!displayMessageAndGetString("File name: ", &p, tmp, sizeof(tmp))) return FALSE;
+  }
   if (!is_file(tmp)) return FALSE;
   FREE(lastFindFile); lastFindFile = fileName;
   fileName = p;

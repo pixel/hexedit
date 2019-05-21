@@ -262,7 +262,7 @@ static void goto_char(void)
   INT i;
 
   displayOneLineMessage("New position ? ");
-  ungetstr("0x");
+  ungetstr("0x", BLOCK_SEARCH_SIZE);
   if (!get_number(&i) || !set_cursor(i)) displayMessageAndWaitForKey("Invalid position!");
 }
 
