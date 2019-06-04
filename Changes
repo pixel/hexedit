@@ -1,3 +1,12 @@
+may 2019
+	- Added selection begin, end and size in status line.
+	- Added char '>' at end of status line when the file name doesn't fit.
+	- Moved file name at end of status line, so when the file name is too long doesn't hide position, size, percentage and selection.
+	- Added clrtoeol after displayLine to clear to end of line because if you load with F3 and file name have chars beyond ASCII,
+	  it leaves these chars as garbage.
+	- Also updated to use clrtoeol to cleanup the line.
+	- fix core dump when file size is 0 (trying to show percentage).
+
 september 2017
 	- 1.4.2
 	- fix spelling errors in manpage

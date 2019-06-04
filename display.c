@@ -183,31 +183,57 @@ void exitCurses(void)
 void display(void)
 {
   int i;
+  char buf[BUFLEN];
+  int len_line;
 
   for (i = 0; i < nbBytes; i += lineLength) {
     move(i / lineLength, 0);
     displayLine(i, nbBytes);
-  }
-  for (; i < page; i += lineLength) {
-    int j;
-    move(i / lineLength, 0);
-    for (j = 0; j < colsUsed; j++) printw(" "); /* cleanup the line */
-    move(i / lineLength, 0);
-    PRINTW(("%08lX", (int) (base + i)));
+    clrtoeol();
   }
 
+  for (; i < page; i += lineLength) {
+    move(i / lineLength, 0);
+    PRINTW(("%08lX", (int) (base + i)));
+    clrtoeol();
+  }
   attrset(NORMAL);
   move(LINES - 1, 0);
   for (i = 0; i < colsUsed; i++) printw("-");
+  clrtoeol();
   move(LINES - 1, 0);
   if (isReadOnly) i = '%';
   else if (edited) i = '*';
   else i = '-';
-  printw("-%c%c  %s       --0x%llX", i, i, baseName, base + cursor);
-  if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", getfilesize());
-  printw("--%i%%", 100 * (base + cursor + getfilesize()/200) / getfilesize() );
-  if (mode == bySector) printw("--sector %lld", (base + cursor) / SECTOR_SIZE);
-
+  len_line = snprintf(buf, BUFLEN, "-%c%c 0x%llX", i, i, base + cursor);
+  printw(buf);
+  if (MAX(fileSize, lastEditedLoc)) {
+      len_line += snprintf(buf, BUFLEN, "/0x%llX", getfilesize());
+      printw(buf);
+  }
+  if (getfilesize() > 0) {
+    len_line += snprintf(buf, BUFLEN, "--%i%%%%", 100 * (base + cursor + getfilesize() / 200) / getfilesize() );
+    printw(buf);
+  } else {
+    len_line += snprintf(buf, BUFLEN, "-- 0%%%%");
+    printw(buf);
+  }
+  if (mode == bySector) {
+      len_line += snprintf(buf, BUFLEN, "--sector %lld", (base + cursor) / SECTOR_SIZE);
+      printw(buf);
+  }
+  if (mark_set) {
+      len_line += snprintf(buf, BUFLEN, "--sel 0x%llX/0x%llX--size 0x%llX", mark_min, mark_max, mark_max - mark_min + 1);
+      printw(buf);
+  }
+  len_line += snprintf(buf, BUFLEN, " %s", baseName);
+  printw(buf);
+  // Print space after file name if it fits in the status line. Don't need to be added to length of line.
+  if (len_line < COLS) printw(" ");
+  if (len_line > COLS + 1) {
+      move(LINES - 1, COLS - 1);
+      printw(">");
+  }
   move(cursor / lineLength, computeCursorXCurrentPos());
 }
 

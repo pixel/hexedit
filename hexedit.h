@@ -235,4 +235,6 @@ char *strdup(const char *str)
 #define memcmp(s1, s2, n) bcmp(s2, s1, n)
 #endif
 
+#define BUFLEN 1024
+
 #endif  /* HEXEDIT_H */
