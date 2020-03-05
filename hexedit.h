@@ -1,12 +1,14 @@
 #ifndef HEXEDIT_H
 #define HEXEDIT_H
 
+
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <getopt.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
@@ -100,6 +102,11 @@ extern int isReadOnly, fd, nbBytes, oldcursor, oldattr, oldcursorOffset;
 extern int sizeCopyBuffer, *bufferAttr;
 extern char *progName, *fileName, *baseName;
 extern unsigned char *buffer, *copyBuffer;
+extern INT diffFileSize;
+extern unsigned char *diffBuffer;
+extern char *difffileName;
+extern int difffd, diffnbBytes;
+
 extern typePage *edited;
 
 extern char *lastFindFile, *lastYankToAFile, *lastAskHexString, *lastAskAsciiString, *lastFillWithStringHexa, *lastFillWithStringAscii;
@@ -115,6 +122,8 @@ void quit(void);
 int tryloc(INT loc);
 void openFile(void);
 void readFile(void);
+void openDiffFile(void);
+void readDiffFile(void);
 int findFile(void);
 int computeLineSize(void);
 int computeCursorXCurrentPos(void);
