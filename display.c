@@ -207,6 +207,7 @@ void display(void)
   if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", (long long) getfilesize());
   printw("--%i%%", 100 * (base + cursor + getfilesize()/200) / getfilesize() );
   if (mode == bySector) printw("--sector %lld", (long long) ((base + cursor) / SECTOR_SIZE));
+  if (notes[base+cursor].note) printw("--note: %s", notes[base+cursor].note);
 
   move(cursor / lineLength, computeCursorXCurrentPos());
 }

@@ -102,7 +102,14 @@ extern char *progName, *fileName, *baseName;
 extern unsigned char *buffer, *copyBuffer;
 extern typePage *edited;
 
-extern char *lastFindFile, *lastYankToAFile, *lastAskHexString, *lastAskAsciiString, *lastFillWithStringHexa, *lastFillWithStringAscii;
+#define NOTE_SIZE 100
+typedef struct _noteStruct {
+  char *note;
+} noteStruct;
+extern noteStruct *notes;
+extern size_t notes_size;
+
+extern char *lastFindFile, *lastYankToAFile, *lastAskHexString, *lastAskAsciiString, *lastFillWithStringHexa, *lastFillWithStringAscii, *lastNote;
 
 
 /*******************************************************************************/

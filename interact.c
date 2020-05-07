@@ -177,6 +177,51 @@ static void truncate_file(void)
   }
 }
 
+static void add_note(void)
+{
+  // Grow the notes buffer if we need to
+  if (base+cursor > notes_size) {
+    notes_size = base+cursor+NOTE_SIZE;
+    notes = (noteStruct*) realloc(notes,notes_size*sizeof(noteStruct));
+  }
+
+  char tmp[BLOCK_SEARCH_SIZE], msg[BLOCK_SEARCH_SIZE];
+
+  // Check if we're adding a new note or changing a existing note
+  if (notes[base+cursor].note) {
+    strlcpy(lastNote, notes[base+cursor].note, NOTE_SIZE);
+    snprintf(msg, BLOCK_SEARCH_SIZE, "Change the note for 0x%llx: ", base+cursor);
+  } else
+    snprintf(msg, BLOCK_SEARCH_SIZE, "Enter a note for 0x%llx: ", base+cursor);
+    free(notes[base+cursor].note);
+    notes[base+cursor].note = NULL;
+    notes[base+cursor].note = (char*) malloc(NOTE_SIZE);
+  char** last = &lastNote; 
+
+  if (!displayMessageAndGetString(msg, last, tmp, sizeof(tmp))) return;
+
+  // Overly paranoid, but clear the note before copying it in
+  memset(notes[base+cursor].note,'\0',NOTE_SIZE);
+  strlcpy(notes[base+cursor].note,tmp,NOTE_SIZE);
+}
+
+static void get_note(void)
+{
+  if (notes[base+cursor].note)
+    displayMessageAndWaitForKey(notes[base+cursor].note);
+  else
+    displayMessageAndWaitForKey("No note set for current position!");
+}
+
+static void delete_note(void)
+{
+  if (notes[base+cursor].note) {
+    free(notes[base+cursor].note);
+    notes[base+cursor].note = NULL;
+    displayMessageAndWaitForKey("Note deleted");
+  }
+}
+
 static void firstTimeHelp(void)
 {
   static int firstTime = TRUE;
@@ -609,6 +654,18 @@ static void escaped_command(void)
 
   case 't':
     truncate_file();
+    break;
+
+  case 'o':
+    add_note();
+    break;
+
+  case 'g':
+    get_note();
+    break;
+
+  case 'd':
+    delete_note();
     break;
 
   case '':
