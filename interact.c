@@ -200,6 +200,8 @@ static void add_note(void)
 
   if (!displayMessageAndGetString(msg, last, tmp, sizeof(tmp))) return;
 
+  // You don't actually see this, but it clears artifacts left on the screen
+  displayOneLineMessage("Note Set");
   // Overly paranoid, but clear the note before copying it in
   memset(notes[base+cursor].note,'\0',NOTE_SIZE);
   strlcpy(notes[base+cursor].note,tmp,NOTE_SIZE);
@@ -219,6 +221,44 @@ static void delete_note(void)
     free(notes[base+cursor].note);
     notes[base+cursor].note = NULL;
     displayMessageAndWaitForKey("Note deleted");
+  }
+}
+
+static void change_color(void)
+{
+  //CYAN MAGENTA YELLOW
+  displayOneLineMessage("Tag this byte with which color (1/2/3)?");
+  int color=0;
+  switch (getch())
+  {
+    case '1': color = (int) COLOR_PAIR(5); break;
+    case '2': color = (int) COLOR_PAIR(6); break;
+    case '3': color = (int) COLOR_PAIR(7); break;
+    default: displayMessageAndWaitForKey("Invalid choice, must be between 1-3"); return;
+  }
+  // Are we changing a range or a single byte?
+  if (mark_set)
+    for (int i = MAX(mark_min - base, 0); i <= MIN(mark_max - base, nbBytes - 1); i++)
+    {
+      // It's late and I'm too tired to work out how to nix the color but
+      // preserve the other bits
+      int m = bufferAttr[i] & MARKED;
+      int b = bufferAttr[i] & A_BOLD;
+      bufferAttr[i] = color;
+      bufferAttr[i] |= TAGGED;
+      bufferAttr[i] |= m;
+      bufferAttr[i] |= b;
+    }
+  else
+  {
+    // It's late and I'm too tired to work out how to nix the color but
+    // preserve the other bits
+    int m = bufferAttr[i] & MARKED;
+    int b = bufferAttr[i] & A_BOLD;
+    bufferAttr[cursor] = color;
+    bufferAttr[cursor] |= TAGGED;
+    bufferAttr[i] |= m;
+    bufferAttr[i] |= b;
   }
 }
 
@@ -340,7 +380,9 @@ static void save_buffer(void)
   edited = NULL;
   if (lastEditedLoc > fileSize) fileSize = lastEditedLoc;
   lastEditedLoc = 0;
-  memset(bufferAttr, A_NORMAL, page * sizeof(*bufferAttr));
+  //memset(bufferAttr, A_NORMAL, page * sizeof(*bufferAttr));
+  for (int i=base; i<nbBytes; i++)
+    bufferAttr[i] &= ~MODIFIED;
   if (displayedmessage) {
     displayMessageAndWaitForKey("Unwritten changes have been discarded");
     readFile();
@@ -666,6 +708,10 @@ static void escaped_command(void)
 
   case 'd':
     delete_note();
+    break;
+
+  case 'c':
+    change_color();
     break;
 
   case '':

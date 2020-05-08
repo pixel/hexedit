@@ -51,6 +51,7 @@
 #define NORMAL A_NORMAL
 #define MARKED A_REVERSE
 #define MODIFIED A_BOLD
+#define TAGGED A_STANDOUT
 #define ATTRPRINTW(attr, a) do { if (oldattr != (attr)) attrset(attr), oldattr = (attr); printw a; } while (0)
 #define MAXATTRPRINTW(attr, a) do { if (oldattr & (~(attr))) attrset(attr & oldattr), oldattr &= (attr); printw a; } while (0)
 #define PRINTW(a) ATTRPRINTW(NORMAL, a)
