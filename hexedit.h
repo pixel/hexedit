@@ -109,6 +109,8 @@ typedef struct _noteStruct {
 } noteStruct;
 extern noteStruct *notes;
 extern size_t notes_size;
+extern int tagFile;
+extern FILE *tagfd;
 
 extern char *lastFindFile, *lastYankToAFile, *lastAskHexString, *lastAskAsciiString, *lastFillWithStringHexa, *lastFillWithStringAscii, *lastNote;
 
@@ -123,6 +125,9 @@ void quit(void);
 int tryloc(INT loc);
 void openFile(void);
 void readFile(void);
+void openTagFile(void);
+void readTagFile(void);
+void writeTagFile(void);
 int findFile(void);
 int computeLineSize(void);
 int computeCursorXCurrentPos(void);

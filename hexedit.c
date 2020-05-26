@@ -31,7 +31,9 @@ char *progName, *fileName, *baseName;
 unsigned char *buffer, *copyBuffer;
 typePage *edited;
 noteStruct *notes;
-size_t notes_size=NOTE_SIZE;
+size_t notes_size = NOTE_SIZE;
+int tagFile = 0;
+FILE *tagfd;
 
 char *lastFindFile = NULL, *lastYankToAFile = NULL, *lastAskHexString = NULL, *lastAskAsciiString = NULL, *lastFillWithStringHexa = NULL, *lastFillWithStringAscii = NULL, *lastNote = NULL;
 
@@ -103,6 +105,7 @@ int main(int argc, char **argv)
     openFile();
   }
   readFile();
+  openTagFile();
   do display();
   while (key_to_function(getch()));
   quit();
@@ -136,6 +139,7 @@ void quit(void)
   for (int i=0; i<notes_size; i++)
     FREE(notes[i].note);
   free(notes);
+  fclose(tagfd);
   exit(0);
 }
 

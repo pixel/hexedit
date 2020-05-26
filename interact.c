@@ -189,22 +189,29 @@ static void add_note(void)
 
   // Check if we're adding a new note or changing a existing note
   if (notes[base+cursor].note) {
-    strlcpy(lastNote, notes[base+cursor].note, NOTE_SIZE);
+    // Handle the first change of a note set via tag file
+    if (!lastNote) lastNote = (char*) malloc(NOTE_SIZE);
+    snprintf(lastNote, NOTE_SIZE, "%s", notes[base+cursor].note);
     snprintf(msg, BLOCK_SEARCH_SIZE, "Change the note for 0x%llx: ", base+cursor);
-  } else
+  }
+   else
+  {
     snprintf(msg, BLOCK_SEARCH_SIZE, "Enter a note for 0x%llx: ", base+cursor);
     free(notes[base+cursor].note);
     notes[base+cursor].note = NULL;
     notes[base+cursor].note = (char*) malloc(NOTE_SIZE);
+  }
   char** last = &lastNote; 
 
+  //if (!displayMessageAndGetString(msg, last, tmp, sizeof(tmp))) return;
   if (!displayMessageAndGetString(msg, last, tmp, sizeof(tmp))) return;
 
   // You don't actually see this, but it clears artifacts left on the screen
   displayOneLineMessage("Note Set");
+
   // Overly paranoid, but clear the note before copying it in
   memset(notes[base+cursor].note,'\0',NOTE_SIZE);
-  strlcpy(notes[base+cursor].note,tmp,NOTE_SIZE);
+  snprintf(notes[base+cursor].note,NOTE_SIZE,"%s",tmp);
 }
 
 static void get_note(void)
@@ -253,12 +260,12 @@ static void change_color(void)
   {
     // It's late and I'm too tired to work out how to nix the color but
     // preserve the other bits
-    int m = bufferAttr[i] & MARKED;
-    int b = bufferAttr[i] & A_BOLD;
-    bufferAttr[cursor] = color;
-    bufferAttr[cursor] |= TAGGED;
-    bufferAttr[i] |= m;
-    bufferAttr[i] |= b;
+    int m = bufferAttr[base+cursor] & MARKED;
+    int b = bufferAttr[base+cursor] & A_BOLD;
+    bufferAttr[base+cursor] = color;
+    bufferAttr[base+cursor] |= TAGGED;
+    bufferAttr[base+cursor] |= m;
+    bufferAttr[base+cursor] |= b;
   }
 }
 
@@ -712,6 +719,10 @@ static void escaped_command(void)
 
   case 'c':
     change_color();
+    break;
+
+  case 's':
+    writeTagFile();
     break;
 
   case '':

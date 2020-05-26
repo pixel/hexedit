@@ -134,4 +134,155 @@ int is_file(char *name)
   return stat(name, &st) != -1 && !S_ISDIR(st.st_mode);
 }
 
+void openTagFile(void)
+{
+  // tagFile 0 - doesn't exist, 1 - problem, 2 - read only, 3 - read write
 
+  char tagFileName[BLOCK_SEARCH_SIZE];
+  snprintf(tagFileName, BLOCK_SEARCH_SIZE, "%s.tags", fileName);
+
+  if (!is_file(tagFileName))
+    tagFile = 0;
+  else {
+    tagfd = fopen(tagFileName, "rw");
+    if (tagfd != NULL)
+      tagFile = 3;
+    else
+    {
+      tagfd = fopen(tagFileName, "r");
+      tagFile = tagfd != NULL ? 2 : 1;
+    }
+  }
+
+  if (tagfd != NULL && tagFile > 1)
+    readTagFile();
+}
+
+void readTagFile(void)
+{
+  char raw[BLOCK_SEARCH_SIZE], *line, *token;
+
+  while (fgets(raw, BLOCK_SEARCH_SIZE, tagfd) != NULL)
+  {
+    line = (char*)&raw;
+    int loc = 0;
+
+    token = strsep(&line, " ");
+    if (strncmp(token, "0x0", BLOCK_SEARCH_SIZE) == 0)
+      loc = 0;
+    else
+    {
+      loc = (int)strtol(token, NULL, 16);
+      if ( loc == 0) //Couldn't covert the position, skip the line
+        continue;
+    }
+
+    token = strsep(&line, " "); 
+    if ( token == NULL ) //Couldn't find a token skip rest of line
+      continue;
+
+    // Note n:
+    if (strncmp(token,"n:",BLOCK_SEARCH_SIZE) == 0)
+    {
+      char *note = strsep(&line, "\n");
+      if (loc > notes_size)
+      {
+        notes_size = loc+NOTE_SIZE;
+        notes = (noteStruct*) realloc(notes,notes_size*sizeof(noteStruct));
+      }
+      notes[loc].note = (char*) malloc(NOTE_SIZE);
+      memset(notes[loc].note,'\0',NOTE_SIZE);
+      snprintf(notes[loc].note,NOTE_SIZE,"%s",note);
+    }
+
+    // Colour c: 1-CYAN, 2-MAGENTA, 3-YELLOW
+    if (strncmp(token,"c:",BLOCK_SEARCH_SIZE) == 0)
+    {
+      char *restofline;
+      int end = 0, color = 0;
+      int col = (int)strtol(line, &restofline, 10);
+      if (col < 1 || col > 3) //conversion error or out of range
+        continue;
+      if (restofline)
+        end = (int)strtol(restofline, NULL, 10);
+
+      switch (col) {
+        case 1: color = (int) COLOR_PAIR(5); break;
+        case 2: color = (int) COLOR_PAIR(6); break;
+        case 3: color = (int) COLOR_PAIR(7); break;
+      }
+      if (end != 0)
+        for (int i = loc; i < loc+end; i++)
+        {
+          int m = bufferAttr[i] & MARKED;
+          int b = bufferAttr[i] & A_BOLD;
+          bufferAttr[i] = color;
+          bufferAttr[i] |= TAGGED;
+          bufferAttr[i] |= m;
+          bufferAttr[i] |= b;
+        }
+      else
+      {
+        int m = bufferAttr[loc] & MARKED;
+        int b = bufferAttr[loc] & A_BOLD;
+        bufferAttr[loc] = color;
+        bufferAttr[loc] |= TAGGED;
+        bufferAttr[loc] |= m;
+        bufferAttr[loc] |= b;
+      }
+    } 
+  }
+}
+
+void writeTagFile(void)
+{
+  if (tagFile == 1 || tagFile == 2) return; // tag file not writeable
+
+  if (tagFile == 3 || tagFile == 0) // writeable and open
+  {
+    displayOneLineMessage("Write tags to file? (y/N)");
+    if (tolower(getch()) != 'y') return;
+
+    char tagFileName[BLOCK_SEARCH_SIZE];
+    snprintf(tagFileName, BLOCK_SEARCH_SIZE, "%s.tags", fileName);
+    tagfd = freopen(tagFileName, "w", tagfd);
+
+    int start=0, end=0, col=0, lastcol=0;
+    for (int i = 0; i < fileSize; i++)
+    {
+      if (notes[i].note) fprintf(tagfd, "0x%x n: %s\n", i, notes[i].note);
+      if (bufferAttr[i] & TAGGED)
+      {
+        col = (bufferAttr[i] & COLOR_PAIR(7)) == COLOR_PAIR(7) ? 3 : 
+              (bufferAttr[i] & COLOR_PAIR(6)) == COLOR_PAIR(6) ? 2 : 
+              (bufferAttr[i] & COLOR_PAIR(5)) == COLOR_PAIR(5) ? 1 : 0;
+
+        if ( start != 0 && i == end+1 && col == lastcol )
+          end = i;
+        if ( start != 0 && i == end+1 && col != lastcol )
+        {
+          fprintf(tagfd, "0x%x c: %d %d\n", start, lastcol, 1+end-start);
+          start = i;
+          end = i;
+        }
+        if ( start == 0 )
+        {
+          start = i;
+          end = i;
+        }
+        lastcol = col;
+      }
+      else
+      {
+        if ( start != 0 && i == end+1 )
+        {
+          fprintf(tagfd, "0x%x c: %d %d\n", start, lastcol, 1+end-start);
+          start = 0;
+          end = 0;
+        }
+      }
+    }
+
+    fclose(tagfd);
+  }
+}
