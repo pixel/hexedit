@@ -664,7 +664,7 @@ static void escaped_command(void)
 
   case '[': 
     for (i = 0; i < BLOCK_SEARCH_SIZE - 1; i++) { tmp[i] = c = getch(); if (!isdigit(c)) break; }
-    tmp[i + 1] = '\0';
+    tmp[i < BLOCK_SEARCH_SIZE - 1 ? i + 1 : i] = '\0';
     
     if (0);
     else if (streq(tmp, "2~")) yank();
