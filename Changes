@@ -1,3 +1,16 @@
+august 2020
+    - 1.5
+	- Fix searching very long string
+	- Keep status of firstTime beween calls. (#35)
+	- man page: use simple double quotes (instead of weird ```xxx''')
+	- Properly handle off_t on non-lfs 32 bit systems.
+	- Fixed compiler warnings.
+	- Do not allow negative line length. (#34)
+	- fix overflow on excessively long escape sequence. (#32)
+	- Ignore KEY_RESIZE in main loop. (#33)
+	- Show percentage of cursor relative to filesize.
+	- Bug copy & paste (#29)
+
 september 2017
 	- 1.4.2
 	- fix spelling errors in manpage
