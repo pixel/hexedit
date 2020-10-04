@@ -182,6 +182,7 @@ void exitCurses(void)
 
 void display(void)
 {
+  long long fsize;
   int i;
 
   for (i = 0; i < nbBytes; i += lineLength) {
@@ -204,8 +205,9 @@ void display(void)
   else if (edited) i = '*';
   else i = '-';
   printw("-%c%c  %s       --0x%llX", i, i, baseName, (long long) base + cursor);
-  if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", (long long) getfilesize());
-  printw("--%i%%", 100 * (base + cursor + getfilesize()/200) / getfilesize() );
+  fsize = getfilesize();
+  if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", fsize);
+  printw("--%i%%", fsize == 0 ? 0 : 100 * (base + cursor + fsize/200) / fsize );
   if (mode == bySector) printw("--sector %lld", (long long) ((base + cursor) / SECTOR_SIZE));
 
   move(cursor / lineLength, computeCursorXCurrentPos());
