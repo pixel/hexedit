@@ -34,6 +34,10 @@ static int searchA(char **string, int *sizea, char *tmp, int tmp_size)
   if (hexOrAscii) if (!hexStringToBinString(tmp, sizea)) return FALSE;
 
   *string = malloc(*sizea);
+  if (!*string) {
+    displayMessageAndWaitForKey("Can't allocate memory");
+    return FALSE;
+  }
   memcpy(*string, tmp, *sizea);
 
   nodelay(stdscr, TRUE);

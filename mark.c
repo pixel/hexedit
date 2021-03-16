@@ -112,6 +112,10 @@ void fill_with_string(void)
     } else if (!hexStringToBinString(tmp2, &l2)) return;
   }
   tmp1 = malloc(l1);
+  if (!tmp1) {
+    displayMessageAndWaitForKey("Can't allocate memory");
+    return;
+  }
   for (i = 0; i < l1 - l2 + 1; i += l2) memcpy(tmp1 + i, tmp2, l2);
   memcpy(tmp1 + i, tmp2, l1 - i);
   addToEdited(mark_min, l1, tmp1);
