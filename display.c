@@ -100,29 +100,11 @@ int computeCursorXPos(int cursor, int hexOrAscii)
 /*******************************************************************************/
 /* Curses functions */
 /*******************************************************************************/
-static void handleSigWinch(int sig)
-{
-  /*Close and refresh window to get new size*/
-  endwin();
-  refresh();
-
-  /*Reset to trigger recalculation*/
-  lineLength = 0;
-
-  clear();
-  initDisplay();
-  readFile();
-  display();
-}
 
 void initCurses(void)
 {
   struct sigaction sa;
   initscr();
-
-  memset(&sa, 0, sizeof(struct sigaction));
-  sa.sa_handler = handleSigWinch;
-  sigaction(SIGWINCH, &sa, NULL);
 
 #ifdef HAVE_COLORS
   if (colored) {

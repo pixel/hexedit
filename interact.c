@@ -341,9 +341,21 @@ int key_to_function(int key)
 
   switch (key)
     {
-    case ERR:
     case KEY_RESIZE:
-      /*no-op*/
+      /*Close and refresh window to get new size*/
+      endwin();
+      refresh();
+
+      /*Reset to trigger recalculation*/
+      lineLength = 0;
+
+      clear();
+      initDisplay();
+      readFile();
+      display();
+      break;
+
+    case ERR:
       break;
 
     case KEY_RIGHT:
