@@ -3,9 +3,10 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_PREREQ(2.50)
+AC_PREREQ([2.69])
 
-AC_INIT(hexedit.c)
+AC_INIT
+AC_CONFIG_SRCDIR([hexedit.c])
 AC_CONFIG_HEADERS(config.h)
 
 define(TheVERSION, 1.5)
@@ -48,7 +49,7 @@ dnl whether functions and headers are available, whether they work, etc.
 AC_SYS_LARGEFILE
 
 dnl Checks for header files.
-AC_HEADER_STDC
+AC_PROG_EGREP
 AC_HEADER_STAT
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h unistd.h libgen.h sys/mount.h)
@@ -72,4 +73,5 @@ $ac_includes_default
 #endif
 )
 
-AC_OUTPUT(Makefile Makefile-build hexedit.1)
+AC_CONFIG_FILES([Makefile Makefile-build hexedit.1])
+AC_OUTPUT
