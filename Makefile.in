@@ -46,3 +46,7 @@ install: $(PRODUCT)
 	$(INSTALL) -m 755 $(PRODUCT) $(DESTDIR)$(bindir)
 	$(INSTALL) -d -m 755 $(DESTDIR)$(mandir)/man1
 	$(INSTALL) -m 644 $(PRODUCT).1 $(DESTDIR)$(mandir)/man1
+
+uninstall:
+	test -f $(DESTDIR)$(bindir)/$(PRODUCT) && rm -f $(DESTDIR)$(bindir)/$(PRODUCT)
+	test -f $(DESTDIR)$(mandir)/man1/$(PRODUCT).1 && rm -r $(DESTDIR)$(mandir)/man1/$(PRODUCT).1

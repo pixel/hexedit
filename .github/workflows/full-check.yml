@@ -17,11 +17,11 @@ jobs:
            ./configure
            make
            sudo make install
-#           sudo make uninstall
-#           make distclean
-#    - name: second_build_to_test_build_twice
-#      run: |
-#           ./autogen.sh
-#           ./configure
-#           make
-#           sudo make install
+           sudo make uninstall
+           make distclean
+    - name: second_build_to_test_build_twice
+      run: |
+           ./autogen.sh
+           ./configure
+           make
+           sudo make install
