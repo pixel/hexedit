@@ -25,3 +25,6 @@ jobs:
            ./configure
            make
            sudo make install
+    - name: run_hexedit_to_show_version
+      run: |
+           hexedit -v 2>&1 | grep maximize
