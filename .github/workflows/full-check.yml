@@ -1,0 +1,30 @@
+name: full-check
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install_dependencies
+      run: sudo apt install libncurses5-dev
+    - name: first_build
+      run: |
+           ./autogen.sh
+           ./configure
+           make
+           sudo make install
+           sudo make uninstall
+           make distclean
+    - name: second_build_to_test_build_twice
+      run: |
+           ./autogen.sh
+           ./configure
+           make
+           sudo make install
+    - name: run_hexedit_to_show_version
+      run: |
+           hexedit -v 2>&1 | grep maximize
