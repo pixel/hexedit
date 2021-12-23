@@ -36,7 +36,8 @@ AC_PROG_INSTALL
 
 dnl Checks for libraries.
 AC_CHECK_LIB(curses, initscr, LIBS="$LIBS -lcurses",
-  [AC_CHECK_LIB(ncurses, initscr, LIBS="$LIBS -lncurses")]
+  [AC_CHECK_LIB(ncurses, initscr, LIBS="$LIBS -lncurses",
+    AC_MSG_ERROR([libcurses/libncurses not found.]))]
 )
 AC_CHECK_LIB(tinfo, keypad, LIBS="$LIBS -ltinfo")
 AC_CHECK_FUNC(use_default_colors, 
