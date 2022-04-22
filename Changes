@@ -1,3 +1,12 @@
+april 2022
+    - 1.6
+    - configure script must error-out when (n)curses isn't found
+    - Move SIGWINCH handling from handler to NCURSES
+    - Make configure.ac compliant with autoconf >= 2.70
+    - Check that malloc did not return NULL
+    - Fix a possible memory leak in findFile()
+    - Prevent division by zero on empty files.
+
 august 2020
     - 1.5
 	- Fix searching very long string
