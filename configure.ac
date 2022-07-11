@@ -15,7 +15,7 @@ PRODUCT=hexedit
 VERSION=TheVERSION
 INCL=hexedit.h
 SRCS="hexedit.c display.c mark.c page.c file.c interact.c misc.c search.c"
-OTHER="COPYING Changes TODO install-sh configure config.h.in hexedit.1 hexedit-TheVERSION.lsm Makefile.in configure.ac Makefile-build.in"
+OTHER="COPYING Changes TODO install-sh configure config.h.in hexedit.1 Makefile.in configure.ac Makefile-build.in"
 AC_SUBST(PRODUCT)
 AC_SUBST(VERSION)
 AC_SUBST(INCL)
