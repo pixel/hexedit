@@ -25,7 +25,7 @@ INT mark_min, mark_max, mark_set;
 INT base, oldbase;
 int normalSpaces, cursor, cursorOffset, hexOrAscii;
 int cursor, blocSize, lineLength, colsUsed, page;
-int isReadOnly, fd, nbBytes, oldcursor, oldattr, oldcursorOffset;
+int fd, nbBytes, oldcursor, oldattr, oldcursorOffset;
 int sizeCopyBuffer, *bufferAttr;
 char *progName, *fileName, *baseName;
 unsigned char *buffer, *copyBuffer;
@@ -40,8 +40,9 @@ const modeParams modes[LAST] = {
 };
 modeType mode = maximized;
 int colored = FALSE;
+int isReadOnly = FALSE;
 
-const char * const usage = "usage: %s [-s | --sector] [-m | --maximize] [-l<n> | --linelength <n>]"
+const char * const usage = "usage: %s [-s | --sector] [-m | --maximize] [-l<n> | --linelength <n>] [-r | --readonly]"
 #ifdef HAVE_COLORS 
      " [--color]"
 #endif 
@@ -60,6 +61,8 @@ int main(int argc, char **argv)
     {
       if (streq(*argv, "-s") || streq(*argv, "--sector"))
 	mode = bySector;
+      else if (streq(*argv, "-r") || streq(*argv, "--readonly"))
+	isReadOnly = TRUE;
       else if (streq(*argv, "-m") || streq(*argv, "--maximize")) {
 	mode = maximized;
 	lineLength = 0;

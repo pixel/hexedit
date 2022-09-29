@@ -26,7 +26,7 @@ void openFile(void)
   }
 
   /* edited should be cleaned here (assert(edited == NULL)) */
-  if ((fd = open(fileName, O_RDWR)) == -1) {
+  if (isReadOnly || (fd = open(fileName, O_RDWR)) == -1) {
     isReadOnly = TRUE;
     if ((fd = open(fileName, O_RDONLY)) == -1) {
       if (page) exitCurses();
