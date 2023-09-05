@@ -1,3 +1,5 @@
+\# no table of contents:
+.HX 0
 .TH HEXEDIT 1 "12 July 1998"
 .SH NAME
 hexedit \- view and edit files in hexadecimal or in ASCII

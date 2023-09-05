@@ -34,7 +34,7 @@ tar: $(ALL)
 	cd .. ; tar cfz $(PRODUCT)/$(TARSOURCE) $(ALL:%=$(PRODUCT)/%)
 
 docs:
-	man2html $(PRODUCT).1
+	groff -mandoc -Thtml $(PRODUCT).1 > $(PRODUCT).html
 
 hexedit.1: hexedit.1.in
 	m4 -DVERSION=$(VERSION) $< > $@
