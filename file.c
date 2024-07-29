@@ -53,6 +53,18 @@ void openFile(void)
       fileSize = 0;
   }
   biggestLoc = fileSize;
+
+  // compute number of digits for address
+
+  nAddrDigits=8;
+  off_t maxAddr = biggestLoc;
+  if (maxAddr > 0xFFFFFFFF) {
+    maxAddr >>= 32;
+    while (maxAddr) {
+      nAddrDigits+=2;
+      maxAddr >>= 8;
+    }
+  }
 }
 
 void readFile(void)
