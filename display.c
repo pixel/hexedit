@@ -164,7 +164,7 @@ void exitCurses(void)
 
 static void printaddr(uint64_t addr)
 {
-  char templ[7];
+  char templ[7]; // maximum string is "%016lX", which is 6 chars + 1 null byte
   sprintf(templ,"%%0%dlX", nAddrDigits);
   PRINTW((templ, addr));
 }
