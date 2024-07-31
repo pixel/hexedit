@@ -97,6 +97,7 @@ extern INT base, oldbase;
 extern int normalSpaces, cursor, cursorOffset, hexOrAscii;
 extern int cursor, blocSize, lineLength, colsUsed, page;
 extern int isReadOnly, fd, nbBytes, oldcursor, oldattr, oldcursorOffset;
+extern int nAddrDigits;
 extern int sizeCopyBuffer, *bufferAttr;
 extern char *progName, *fileName, *baseName;
 extern unsigned char *buffer, *copyBuffer;

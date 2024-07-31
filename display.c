@@ -84,7 +84,7 @@ int computeLineSize(void) { return computeCursorXPos(lineLength - 1, 0) + 1; }
 int computeCursorXCurrentPos(void) { return computeCursorXPos(cursor, hexOrAscii); }
 int computeCursorXPos(int cursor, int hexOrAscii)
 {
-  int r = 11;
+  int r = nAddrDigits + 3;
   int x = cursor % lineLength;
   int h = (hexOrAscii ? x : lineLength - 1);
 
@@ -162,6 +162,13 @@ void exitCurses(void)
   endwin();
 }
 
+static void printaddr(uint64_t addr)
+{
+  char templ[7]; // maximum string is "%016lX", which is 6 chars + 1 null byte
+  sprintf(templ,"%%0%dlX", nAddrDigits);
+  PRINTW((templ, addr));
+}
+
 void display(void)
 {
   long long fsize;
@@ -176,7 +183,7 @@ void display(void)
     move(i / lineLength, 0);
     for (j = 0; j < colsUsed; j++) printw(" "); /* cleanup the line */
     move(i / lineLength, 0);
-    PRINTW(("%08lX", (int) (base + i)));
+    printaddr(base+i);
   }
 
   attrset(NORMAL);
@@ -201,7 +208,8 @@ void displayLine(int offset, int max)
 #ifdef HAVE_COLORS
   mark_color = COLOR_PAIR(4) | A_BOLD;
 #endif
-  PRINTW(("%08lX   ", (int) (base + offset)));
+  printaddr(base + offset);
+  PRINTW(("   "));
   for (i = offset; i < offset + lineLength; i++) {
     if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "));
     if (i < max) {

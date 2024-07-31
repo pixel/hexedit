@@ -16,6 +16,26 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
 #include "hexedit.h"
 
+
+// Compute number of hex-digits needed to display an address.
+// We only increase this by full bytes (2 digits).
+// Because the input is uint64_t, the maximum result is 16 (64bit = 16*4bit).
+int compute_nDigits(uint64_t maxAddr)
+{
+  int digits = 0;
+  while (maxAddr) {
+    digits+=2;
+    maxAddr >>= 8;
+  }
+
+  if (digits==0) {
+    return 2;
+  }
+
+  return digits;
+}
+
+
 void openFile(void)
 {
   struct stat st;
@@ -53,6 +73,13 @@ void openFile(void)
       fileSize = 0;
   }
   biggestLoc = fileSize;
+
+  nAddrDigits = compute_nDigits(biggestLoc);
+
+  // use at least 8 digits (4 byte addresses)
+  if (nAddrDigits < 8) {
+    nAddrDigits = 8;
+  }
 }
 
 void readFile(void)

@@ -26,6 +26,7 @@ INT base, oldbase;
 int normalSpaces, cursor, cursorOffset, hexOrAscii;
 int cursor, blocSize, lineLength, colsUsed, page;
 int fd, nbBytes, oldcursor, oldattr, oldcursorOffset;
+int nAddrDigits;
 int sizeCopyBuffer, *bufferAttr;
 char *progName, *fileName, *baseName;
 unsigned char *buffer, *copyBuffer;
