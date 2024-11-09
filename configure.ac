@@ -9,7 +9,7 @@ AC_INIT
 AC_CONFIG_SRCDIR([hexedit.c])
 AC_CONFIG_HEADERS(config.h)
 
-define(TheVERSION, 1.6)
+define(TheVERSION, 1.7)
 
 PRODUCT=hexedit
 VERSION=TheVERSION

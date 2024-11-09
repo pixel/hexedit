@@ -1,3 +1,14 @@
+may 2024
+    - 1.7
+    - Heavily refactored arg parsing to use a simple search-and-dispatch pattern
+    - The argument order no longer matters. The last filename entered is the one used.
+    - longopts can now take arguments in --key=value or --key value format
+    - Added -c to --color
+    - -h/--help is now a canon option
+    - -- now disables opt parsing instead of merely exiting the arg parsing loop
+    - updated man page to explain what -s/--sector does
+    - made an effort to keep code style as similar to pixel's as possible (next line brace, 2-space indent)
+
 april 2022
     - 1.6
     - configure script must error-out when (n)curses isn't found
