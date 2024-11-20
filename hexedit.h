@@ -51,6 +51,7 @@
 #define NORMAL A_NORMAL
 #define MARKED A_REVERSE
 #define MODIFIED A_BOLD
+#define TAGGED A_STANDOUT
 #define ATTRPRINTW(attr, a) do { if (oldattr != (attr)) attrset(attr), oldattr = (attr); printw a; } while (0)
 #define MAXATTRPRINTW(attr, a) do { if (oldattr & (~(attr))) attrset(attr & oldattr), oldattr &= (attr); printw a; } while (0)
 #define PRINTW(a) ATTRPRINTW(NORMAL, a)
@@ -103,7 +104,16 @@ extern char *progName, *fileName, *baseName;
 extern unsigned char *buffer, *copyBuffer;
 extern typePage *edited;
 
-extern char *lastFindFile, *lastYankToAFile, *lastAskHexString, *lastAskAsciiString, *lastFillWithStringHexa, *lastFillWithStringAscii;
+#define NOTE_SIZE 100
+typedef struct _noteStruct {
+  char *note;
+} noteStruct;
+extern noteStruct *notes;
+extern size_t notes_size;
+extern int tagFile;
+extern FILE *tagfd;
+
+extern char *lastFindFile, *lastYankToAFile, *lastAskHexString, *lastAskAsciiString, *lastFillWithStringHexa, *lastFillWithStringAscii, *lastNote;
 
 
 /*******************************************************************************/
@@ -116,6 +126,9 @@ void quit(void);
 int tryloc(INT loc);
 void openFile(void);
 void readFile(void);
+void openTagFile(void);
+void readTagFile(void);
+void writeTagFile(void);
 int findFile(void);
 int computeLineSize(void);
 int computeCursorXCurrentPos(void);

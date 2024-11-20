@@ -113,6 +113,9 @@ void initCurses(void)
     init_pair(1, COLOR_RED, -1);   /* null zeros */
     init_pair(2, COLOR_GREEN, -1); /* control chars */
     init_pair(3, COLOR_BLUE, -1);  /* extended chars */
+    init_pair(5, COLOR_CYAN, -1);  /* custom tag color */
+    init_pair(6, COLOR_MAGENTA, -1); /* custom tag color */
+    init_pair(7, COLOR_YELLOW, -1);  /* custom tag color */
   }
   init_pair(4, COLOR_BLUE, COLOR_YELLOW); /* current cursor position*/
 #endif
@@ -198,6 +201,7 @@ void display(void)
   if (MAX(fileSize, lastEditedLoc)) printw("/0x%llX", fsize);
   printw("--%i%%", fsize == 0 ? 0 : 100 * (base + cursor + fsize/200) / fsize );
   if (mode == bySector) printw("--sector %lld", (long long) ((base + cursor) / SECTOR_SIZE));
+  if (notes_size >= (base+cursor)) if (notes[base+cursor].note) printw("--note: %s", notes[base+cursor].note);
 
   move(cursor / lineLength, computeCursorXCurrentPos());
 }
@@ -217,6 +221,7 @@ void displayLine(int offset, int max)
 #ifdef HAVE_COLORS
 		 (!colored ? 0 :
       (cursor == i && hexOrAscii == 0 ? mark_color :
+      bufferAttr[i] & TAGGED ? 0 :
 		  buffer[i] == 0 ? (int) COLOR_PAIR(1) :
 		  buffer[i] < ' ' ? (int) COLOR_PAIR(2) :
 		  buffer[i] >= 127 ? (int) COLOR_PAIR(3) : 0)

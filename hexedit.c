@@ -31,9 +31,12 @@ int sizeCopyBuffer, *bufferAttr;
 char *progName, *fileName, *baseName;
 unsigned char *buffer, *copyBuffer;
 typePage *edited;
+noteStruct *notes;
+size_t notes_size = NOTE_SIZE;
+int tagFile = 0;
+FILE *tagfd;
 
-char *lastFindFile = NULL, *lastYankToAFile = NULL, *lastAskHexString = NULL, *lastAskAsciiString = NULL, *lastFillWithStringHexa = NULL, *lastFillWithStringAscii = NULL;
-
+char *lastFindFile = NULL, *lastYankToAFile = NULL, *lastAskHexString = NULL, *lastAskAsciiString = NULL, *lastFillWithStringHexa = NULL, *lastFillWithStringAscii = NULL, *lastNote = NULL;
 
 const modeParams modes[LAST] = {
   { 8, 16, 256 },
@@ -55,6 +58,7 @@ const char * const usage = "usage: %s [-s | --sector] [-m | --maximize] [-l<n> |
 /*******************************************************************************/
 int main(int argc, char **argv)
 {
+
   progName = basename(argv[0]);
   argv++; argc--;
 
@@ -105,6 +109,7 @@ int main(int argc, char **argv)
     openFile();
   }
   readFile();
+  openTagFile();
   do display();
   while (key_to_function(getch()));
   quit();
@@ -123,6 +128,7 @@ void init(void)
   hexOrAscii = TRUE;
   copyBuffer = NULL;
   edited = NULL;
+  notes = (noteStruct*) calloc(notes_size,sizeof(noteStruct));
 }
 
 void quit(void)
@@ -133,7 +139,11 @@ void quit(void)
   free(bufferAttr);
   FREE(copyBuffer);
   discardEdited();
-  FREE(lastFindFile); FREE(lastYankToAFile); FREE(lastAskHexString); FREE(lastAskAsciiString); FREE(lastFillWithStringHexa); FREE(lastFillWithStringAscii);
+  FREE(lastFindFile); FREE(lastYankToAFile); FREE(lastAskHexString); FREE(lastAskAsciiString); FREE(lastFillWithStringHexa); FREE(lastFillWithStringAscii); FREE(lastNote);
+  for (int i=0; i<notes_size; i++)
+    FREE(notes[i].note);
+  free(notes);
+  fclose(tagfd);
   exit(0);
 }
 
