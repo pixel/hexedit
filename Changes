@@ -1,219 +1,219 @@
-april 2022
-    - 1.6
-    - configure script must error-out when (n)curses isn't found
-    - Move SIGWINCH handling from handler to NCURSES
-    - Make configure.ac compliant with autoconf >= 2.70
-    - Check that malloc did not return NULL
-    - Fix a possible memory leak in findFile()
-    - Prevent division by zero on empty files.
+## [Unreleased] (date)
+- 
 
-august 2020
-    - 1.5
-	- Fix searching very long string
-	- Keep status of firstTime beween calls. (#35)
-	- man page: use simple double quotes (instead of weird ```xxx''')
-	- Properly handle off_t on non-lfs 32 bit systems.
-	- Fixed compiler warnings.
-	- Do not allow negative line length. (#34)
-	- fix overflow on excessively long escape sequence. (#32)
-	- Ignore KEY_RESIZE in main loop. (#33)
-	- Show percentage of cursor relative to filesize.
-	- Bug copy & paste (#29)
+## 1.6 (03/2022)
+- configure script must error-out when (n)curses isn't found
+- Move SIGWINCH handling from handler to NCURSES 
+- Make configure.ac compliant with autoconf >= 2.70
+- Check that malloc did not return NULL
+- Fix a possible memory leak in findFile()
+- Prevent division by zero on empty files.
 
-september 2017
-	- 1.4.2
-	- fix spelling errors in manpage
-	- fix build
+## 1.5 (08/2020)
+- Fix searching very long string
+- Keep status of firstTime beween calls. (#35)
+- man page: use simple double quotes (instead of weird ```xxx''')
+- Properly handle off_t on non-lfs 32 bit systems.
+- Fixed compiler warnings.
+- Do not allow negative line length. (#34)
+- fix overflow on excessively long escape sequence. (#32)
+- Ignore KEY_RESIZE in main loop. (#33)
+- Show percentage of cursor relative to filesize.
+- Bug copy & paste (#29)
 
-septembre 2017
-	- 1.4
-	- terminal resizing support
-	- fix build
+## 1.4.2 (09/2017)
+- fix spelling errors in manpage
+- fix build
 
-novembre 2016:
-	- mark cursor position in both HEX and ASCII
-	- skip whitespace when parsing hex-strings
+## 1.4 (09/2017)
+- terminal resizing support
+- fix build
 
-march 2014:
-	- fix small but in DIE() which was leaving the terminal in a bad state
-	- added --linelength <n> / -l<n> command line option
+##  (11/2016)
+- mark cursor position in both HEX and ASCII
+- skip whitespace when parsing hex-strings
 
-february 2013:
-	- fix displaying sector number when above 2^31
-	- fix potential file descriptor leak (thanks to Rich Burridge)
-	- add DESTDIR support to the makefiles
-	- preprocessor flags should use CPPFLAGS, not CFLAGS
-	- fix a small issue in mymemmem/mymemrmem when HAVE_MEMMEM/HAVE_MEMRMEM is not defined
+##  (03/2014)
+- fix small but in DIE() which was leaving the terminal in a bad state
+- added --linelength <n> / -l<n> command line option
 
-september 2005:
-	- version 1.2.12
-	- colored (fruit salad) display built by default (if use_default_colors available), 
-	  available through option --color (based on a patch from Yuri D'Elia)
+##  (02/2013)
+- fix displaying sector number when above 2^31
+- fix potential file descriptor leak (thanks to Rich Burridge)
+- add DESTDIR support to the makefiles
+- preprocessor flags should use CPPFLAGS, not CFLAGS
+- fix a small issue in mymemmem/mymemrmem when HAVE_MEMMEM/HAVE_MEMRMEM is not defined
 
-september 2005:
-	- version 1.2.11
-	- add --enable-colors to build and have a colored (fruit salad) display 
-	- allow entering goto "position" and "sector" in hexadecimal or not
-	- when prompting, propose previously entered value, and give ability to modify it
-	- fix setting mark after scrolling
-	- some cleanup
+## 1.2.12 (09/2005)
+- colored (fruit salad) display built by default (if use_default_colors available), 
+  available through option --color (based on a patch from Yuri D'Elia)
 
-may 2004:
-	- version 1.2.10
-	- handle getnstr() not defined (needed for SGI IRIX 6.5.22)
+## 1.2.11 (09/2005)
+- add --enable-colors to build and have a colored (fruit salad) display 
+- allow entering goto "position" and "sector" in hexadecimal or not
+- when prompting, propose previously entered value, and give ability to modify it
+- fix setting mark after scrolling
+- some cleanup
 
-april 2004:
-	- version 1.2.9 (brown paper bag version)
-	- fix searching larger than 3 characters long strings
+## 1.2.10 (05/2004)
+- handle getnstr() not defined (needed for SGI IRIX 6.5.22)
 
-january 2004:
-	- version 1.2.8
-	- replace the unsafe getstr() with getnstr() (thanks to Richard Chadderton)
+## 1.2.9 (04/2004)
+- version 1.2.9 (brown paper bag version)
+- fix searching larger than 3 characters long strings
 
-august 2003:
-	- version 1.2.7
-	- check the presence of <sys/mount.h> before including it
-	- fix build on Digital UNIX 4.0f (remove -Wall)
-	- use the full width of the terminal (the trick is to stop relying on
-	printing "\n", but using move() instead)
-	- fix displaying the offsets at beginning of each line on big endian
-	boxes (thanks to Martin Schaffner)
+## 1.2.8 (01/2004)
+- replace the unsafe getstr() with getnstr() (thanks to Richard Chadderton)
 
-june 2003:
-	- version 1.2.6
-	- fix core dump when searching backward (thanks to Jean Delvare)
-          (the culprit is memrmem, but also fixing provided memrchr)
+## 1.2.7 (08/2003)
+- check the presence of <sys/mount.h> before including it
+- fix build on Digital UNIX 4.0f (remove -Wall)
+- use the full width of the terminal (the trick is to stop relying on
+  printing "\n", but using move() instead)
+- fix displaying the offsets at beginning of each line on big endian
+  boxes (thanks to Martin Schaffner)
 
-june 2003:
-	- version 1.2.5
-	- fix build on Solaris (which doesn't have BLKGETSIZE and all compilers don't have -W)
+## 1.2.6 (06/2003)
+- fix core dump when searching backward (thanks to Jean Delvare)
+  (the culprit is memrmem, but also fixing provided memrchr)
 
-march 2003:
-	- version 1.2.4
-	- use BLKGETSIZE to try to get the size of a device
-	- do not die horribly when accessing after the end
-	- fix provided memrchr() (thanks to Yue Luo)
-	- fix displaying after searching >32bit files (thanks to Paul Mattal)
+## 1.2.5 (06/2003)
+- fix build on Solaris (which doesn't have BLKGETSIZE and all compilers don't have -W)
 
-june 2002:
-	- version 1.2.3
-	- add some KEY_HOME KEY_END (^[[7~ and ^[[8~)
-	- fix for HAVE_MEMMEM
-	- fix my memrchr not behaving the same as libc's
-	- fix the use of memrchr to behave as libc's
-	- use "(void)" in prototype of functions having no parameters
-	- call "raw()" when help() is over
+## 1.2.4 (03/2003)
+- use BLKGETSIZE to try to get the size of a device
+- do not die horribly when accessing after the end
+- fix provided memrchr() (thanks to Yue Luo)
+- fix displaying after searching >32bit files (thanks to Paul Mattal)
 
-october 2001:
-	- version 1.2.2
-	- yet again some s/int/INT/ (mainly in the "edited" list manipulation)
+## 1.2.3 (06/2002)
+- add some KEY_HOME KEY_END (^[[7~ and ^[[8~)
+- fix for HAVE_MEMMEM
+- fix my memrchr not behaving the same as libc's
+- fix the use of memrchr to behave as libc's
+- use "(void)" in prototype of functions having no parameters
+- call "raw()" when help() is over
 
-june 2001:
-	- version 1.2.1
-	- replace llseek with lseek + use of _FILE_OFFSET_BITS=64
-	- memrchr&memmem now exists in some glibc's, so define it only if not provided
-	- cleanup basename declaration
-	- various cleanup in configure.in, now using autoheader
-	- a few bug fixes
+## 1.2.2 (10/2001)
+- yet again some s/int/INT/ (mainly in the "edited" list manipulation)
 
-april 99: 
-	- version 1.1.1
-	- replaced lots of int by INT which 64bits
-	- replaced lseek by llseek (!! portability=linux :( !!)
+## 1.2.1 (06/2001)
+- replace llseek with lseek + use of _FILE_OFFSET_BITS=64
+- memrchr&memmem now exists in some glibc's, so define it only if not provided
+- cleanup basename declaration
+- various cleanup in configure.in, now using autoheader
+- a few bug fixes
 
-11 january 99: (:-<>, it's been a long time)
+## 1.1.1 (04/1999)
+- replaced lots of int by INT which 64bits
+- replaced lseek by llseek (!! portability=linux :( !!)
 
-	- added many shortcuts so that F1..F12 and some others works on more
-	terms (xterm, rxvt, sgi's winterm...)
-	- removed the scanw that's badly handled on sgi (replaced by getstr +
-	sscanf)
+## (11/01/1999)
+- (:-<>, it's been a long time)
+- added many shortcuts so that F1..F12 and some others works on more
+  terms (xterm, rxvt, sgi's winterm...)
+- removed the scanw that's badly handled on sgi (replaced by getstr +
+  sscanf)
 
-24 septembre 98: now displays the reached offset while searching
+## (24/09/1998)
+- now displays the reached offset while searching
 
-10 september 98: hexedit 1.0.0 release
+## 1.0.0 (10/09/1998)
+- hexedit 1.0.0 release
 
-08 september 98: Oliver Kiddle's <opk@thoth.u-net.com> changes:
-	- changed code where a function that returns a void was returning the
-          result of another function. This avoids errors in stricter compilers
-	- used an if where ?: was being used to the left of an assignment
-	- created Makefile.in and configure.in to replace Makefile
-        - added alternative strdup, strerror and memcmp for lacking systems 
+## (08/09/1998)
+- Oliver Kiddle's <opk@thoth.u-net.com> changes:
+- changed code where a function that returns a void was returning the
+  result of another function. This avoids errors in stricter compilers
+- used an if where ?: was being used to the left of an assignment
+- created Makefile.in and configure.in to replace Makefile
+- added alternative strdup, strerror and memcmp for lacking systems 
 
-26 august 98: hexedit 0.9.5 release
+## 0.9.5 (26/08/1998)
+- hexedit 0.9.5 release
 
-26 august 98: removed the total file size in modeline for devices
+## (26/08/1998)
+- removed the total file size in modeline for devices
 
-19 august 98: Evin Robertson's changes:
-	- split hexedit.c into display.c, file.c, hexedit.c, hexedit.h,
-	  interact.c, mark.c, misc.c, page.c, search.c
-	- Makefile changes - now defaults to installing in /usr/local/bin
-	- scrolls one line at a time (but not in sector mode)
-	- allow appending to the file
-	- errors during writing are now non-fatal
-	- show total file size in modeline (not really correct for devices)
-	- gives better error messages when functions return -1
-	- added newlines to the end of fatal error messages
-	- changed sizeof(bufferAttr) to sizeof(*bufferAttr)
-	- grammatical corrections to the man page
-	- removed dashes so the display is 16 bytes wide on an 80 column
-	  screen
-	- backspace now moves back an entire byte in hex mode (I thought the
-	  previous behavior was inconsistent; it moved the cursor one
-	  nybble, but undid an entire byte)
-	- refuse to open directories
-	- disallow using return to go past the end of the file
-	- added truncating ability (M-T)
+## (19/08/1998)
+- Evin Robertson's changes:
+- split hexedit.c into display.c, file.c, hexedit.c, hexedit.h,
+  interact.c, mark.c, misc.c, page.c, search.c
+- Makefile changes - now defaults to installing in /usr/local/bin
+- scrolls one line at a time (but not in sector mode)
+- allow appending to the file
+- errors during writing are now non-fatal
+- show total file size in modeline (not really correct for devices)
+- gives better error messages when functions return -1
+- added newlines to the end of fatal error messages
+- changed sizeof(bufferAttr) to sizeof(*bufferAttr)
+- grammatical corrections to the man page
+- removed dashes so the display is 16 bytes wide on an 80 column
+  screen
+- backspace now moves back an entire byte in hex mode (I thought the
+  previous behavior was inconsistent; it moved the cursor one
+  nybble, but undid an entire byte)
+- refuse to open directories
+- disallow using return to go past the end of the file
+- added truncating ability (M-T)
 
-07 august 98: ability to fill the selection with a string
+## (07/08/1998)
+- ability to fill the selection with a string
 
-06 august 98: forgot to mark all the things while doing them. Here is a list of
-	what's been added:
+## (06/08/1998)
+- forgot to mark all the things while doing them. Here is a list of
+  what's been added:
+- make the display start at the current cursor position
+- go to a sector when in --sector mode
+- added a modeline
+- ability to open another file. Nice for copy&paste between files
+- you're no more forced to save the file per page. This means the
+  cut&paste can now always be undone. It's much simplier that way (idea
+  from Evin C Robertson, thanks)
+- the backspace acts as a small undo of the previous character. It's
+  nice when typing (another idea from Evin C Robertson)
+- the modified-unmodified bytes are not shown in bold (eg: you replace
+  'a' by 'a')
 
-	- make the display start at the current cursor position
-	- go to a sector when in --sector mode
-	- added a modeline
-	- ability to open another file. Nice for copy&paste between files
-	- you're no more forced to save the file per page. This means the
-	cut&paste can now always be undone. It's much simplier that way (idea
-	from Evin C Robertson, thanks)
-	- the backspace acts as a small undo of the previous character. It's
-	nice when typing (another idea from Evin C Robertson)
-	- the modified-unmodified bytes are not shown in bold (eg: you replace
-	'a' by 'a')
+## (26/07/1998)
+- added a TODO file
 
-26 july 98: added a TODO file
+## (26/07/1998)
+- added save copied region in a file
 
-26 july 98: added save copied region in a file
+## (26/07/1998)
+- added search backward
 
-26 july 98: added search backward
+## (25/07/1998)
+- added copy&paste functions
 
-25 july 98: added copy&paste functions
+## (25/07/1998)
+- you can now select a part of the buffer
 
-25 july 98: you can now select a part of the buffer
+## (21/07/1998)
+- modified bytes are shown in bold.
 
-21 july 98: modified bytes are shown in bold.
+## (21/07/1998)
+- corrected a bug, when you call function goto_char and the file is
+  modified, you're now asked if you want to save (before that the changes
+  were lost). You're only asked if the goto_char gets you to a different
+  page of the file.
 
-21 july 98: corrected a bug, when you call function goto_char and the file is
-	modified, you're now asked if you want to save (before that the changes
-	were lost). You're only asked if the goto_char gets you to a different
-	page of the file.
+## (21/07/1998)
+- replace the searchInBuffer function by memmem. Then replaced memmem
+  by mymemmem to counter the libc bug. All this permits a good speedup
+  when searching.
 
-21 july 98: replace the searchInBuffer function by memmem. Then replaced memmem
-	by mymemmem to counter the libc bug. All this permits a good speedup
-	when searching.
+## (21/07/1998)
+- removed the bug in the goto_char function. Now giving an empty
+  string leaves the cursor unmoved. A small bug remains if you give an
+  invalid hexadecimal string starting legally. The scanw(3ncurses)
+  function returns a number corresponding at the legal beginning substring
+  (eg: 1z2 becomes 1).
 
-21 july 98: removed the bug in the goto_char function. Now giving an empty
-	string leaves the cursor unmoved. A small bug remains if you give an
-	invalid hexadecimal string starting legally. The scanw(3ncurses)
-	function returns a number corresponding at the legal beginning substring
-	(eg: 1z2 becomes 1).
+## (21/07/1998)
+- added an install entry in the Makefile (the one Robert Woodcock
+  <rcw@oz.net> made for the debian package, thanks Robert Woodcock).
 
-21 july 98: added an install entry in the Makefile (the one Robert Woodcock
-	<rcw@oz.net> made for the debian package, thanks Robert Woodcock).
-
-21 july 98: creation of the Changes file
-
-
-
-
-
+## (21/07/1998)
+- creation of the Changes file
