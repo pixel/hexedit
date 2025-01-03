@@ -35,8 +35,18 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(PRODUCT)
 
-$(PRODUCT): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+# 0x1C is a file separator, required between each encoding
+default.enc:
+	cat '$(srcdir)'/encodings/ascii.enc > default.enc
+	echo -n -e "\x1C" >> default.enc
+	cat '$(srcdir)'/encodings/ebcdic.enc >> default.enc
+
+# Make embedded file linkable
+default.enc.o: default.enc
+	ld -r -b binary -o default.enc.o default.enc 
+
+$(PRODUCT): $(OBJS) default.enc.o
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) default.enc.o $(LIBS)
 
 clean:
 	rm -rf *~ *.o core *.cache config.status config.log $(PRODUCT) $(PRODUCT).1

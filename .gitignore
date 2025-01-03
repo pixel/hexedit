@@ -9,6 +9,7 @@ Makefile-build
 config.log
 config.status
 autom4te.cache
+build
 
 hexedit.1
 

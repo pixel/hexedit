@@ -199,6 +199,8 @@ void display(void)
   printw("--%i%%", fsize == 0 ? 0 : 100 * (base + cursor + fsize/200) / fsize );
   if (mode == bySector) printw("--sector %lld", (long long) ((base + cursor) / SECTOR_SIZE));
 
+  printw("---- %s ", selectedEncoding->name);
+
   move(cursor / lineLength, computeCursorXCurrentPos());
 }
 
@@ -211,26 +213,38 @@ void displayLine(int offset, int max)
   printaddr(base + offset);
   PRINTW(("   "));
   for (i = offset; i < offset + lineLength; i++) {
-    if (i > offset) MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "));
+    if (i > offset)
+      MAXATTRPRINTW(bufferAttr[i] & MARKED, (((i - offset) % blocSize) ? " " : "  "));
     if (i < max) {
       ATTRPRINTW(
 #ifdef HAVE_COLORS
-		 (!colored ? 0 :
-      (cursor == i && hexOrAscii == 0 ? mark_color :
-		  buffer[i] == 0 ? (int) COLOR_PAIR(1) :
-		  buffer[i] < ' ' ? (int) COLOR_PAIR(2) :
-		  buffer[i] >= 127 ? (int) COLOR_PAIR(3) : 0)
-      ) |
+        (
+          !colored
+          ? (cursor == i && hexOrAscii == 0 ? mark_color : 0)
+          : (
+            cursor == i && hexOrAscii == 0 ? mark_color :
+            buffer[i] == 0 ? (int) COLOR_PAIR(1) :
+            buffer[i] < ' ' ? (int) COLOR_PAIR(2) :
+            buffer[i] >= 127 ? (int) COLOR_PAIR(3) : 0
+          )
+        ) |
+#else
+        (cursor == i && hexOrAscii == 0 ? mark_color : 0)
 #endif
-		 bufferAttr[i], ("%02X", buffer[i]));
+        bufferAttr[i], ("%02X", buffer[i])
+      );
+    }
+    else if (i == max) {
+      PRINTW((".."));
     }
     else PRINTW(("  "));
   }
   PRINTW(("  "));
   for (i = offset; i < offset + lineLength; i++) {
-    if (i >= max) PRINTW((" "));
-    else if (buffer[i] >= ' ' && buffer[i] < 127) ATTRPRINTW((cursor == i && hexOrAscii==1 ? mark_color : 0) | bufferAttr[i], ("%c", buffer[i]));
-    else ATTRPRINTW((cursor == i && hexOrAscii == 1 ? mark_color : 0) | bufferAttr[i], ("."));
+    if (i >= max)
+      PRINTW((" "));
+    else
+      ATTRPRINTW((cursor == i && hexOrAscii == 1 ? mark_color : 0) | bufferAttr[i], ("%s", selectedEncoding->displayCharacters[buffer[i]]));
   }
 }
 
