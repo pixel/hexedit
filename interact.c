@@ -261,8 +261,7 @@ static void goto_char(void)
 {
   INT i;
 
-  displayOneLineMessage("New position ? ");
-  ungetstr("0x");
+  displayOneLineMessage("New position (or +/-offset) ? ");
   if (!get_number(&i) || !set_cursor(i)) displayMessageAndWaitForKey("Invalid position!");
 }
 

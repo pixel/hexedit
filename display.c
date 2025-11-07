@@ -294,16 +294,52 @@ int get_number(INT *i)
 {
   unsigned long long n;
   int err;
+  int is_relative = 0;
+  int is_negative = 0;
   char tmp[BLOCK_SEARCH_SIZE];
+  char *parse_start;
+  
   echo();
   getnstr(tmp, BLOCK_SEARCH_SIZE - 1);
   noecho();
-  if (strbeginswith(tmp, "0x"))
-    err = sscanf(tmp + strlen("0x"), "%llx", &n);
+  
+  parse_start = tmp;
+  
+  if (tmp[0] == '+' || tmp[0] == '-') {
+    is_relative = 1;
+    is_negative = (tmp[0] == '-');
+    parse_start = tmp + 1;
+  }
+  
+  if (strbeginswith(parse_start, "0x"))
+    err = sscanf(parse_start + strlen("0x"), "%llx", &n);
   else
-    err = sscanf(tmp, "%llu", &n);
-  *i = (off_t)n;
-  if (*i < 0 || n != (unsigned long long) *i)
-    err = 0;
-  return err == 1;
+    err = sscanf(parse_start, "%llu", &n);
+    
+  if (err != 1) {
+    return 0;
+  }
+  
+  if (is_relative) {
+    INT current_pos = base + cursor;
+    INT file_size = getfilesize();
+    if (is_negative) {
+      *i = current_pos - (INT)n;
+    } else {
+      *i = current_pos + (INT)n;
+    }
+    // Check for underflow/overflow
+    if (*i < 0) {
+      *i = 0;
+    } else if (*i > file_size) {
+      *i = file_size;
+    }
+  } else {
+    *i = (off_t)n;
+    // Check for overflow for absolute positions
+    if (*i < 0 || n != (unsigned long long) *i)
+      return 0;
+  }
+  
+  return 1;
 }
