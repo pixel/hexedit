@@ -34,6 +34,7 @@
 /*******************************************************************************/
 #define BIGGEST_COPYING (1 * 1024 * 1024)
 #define BLOCK_SEARCH_SIZE (4 * 1024)
+#define MAXLEN_SEARCH_STRING 137
 #define SECTOR_SIZE ((INT) 512)
 #ifndef CTRL
   #define CTRL(c) ((c) & 0x1F)

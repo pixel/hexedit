@@ -58,11 +58,11 @@ static void searchB(INT loc, char *string)
 
 void search_forward(void)
 {
-  char *p, *string, tmp[BLOCK_SEARCH_SIZE], tmpstr[BLOCK_SEARCH_SIZE];
+  char *p, *string, tmp[BLOCK_SEARCH_SIZE], tmpstr[BLOCK_SEARCH_SIZE], tmpInput[MAXLEN_SEARCH_STRING];
   int quit, sizea, sizeb;
   INT blockstart;
 
-  if (!searchA(&string, &sizea, tmp, sizeof(tmp))) return;
+  if (!searchA(&string, &sizea, tmpInput, sizeof(tmpInput))) return;
   quit = -1;
   blockstart = base + cursor - BLOCK_SEARCH_SIZE + sizea;
   do {
@@ -83,11 +83,11 @@ void search_forward(void)
 
 void search_backward(void)
 {
-  char *p, *string, tmp[BLOCK_SEARCH_SIZE], tmpstr[BLOCK_SEARCH_SIZE];
+  char *p, *string, tmp[BLOCK_SEARCH_SIZE], tmpstr[MAXLEN_SEARCH_STRING], tmpInput[MAXLEN_SEARCH_STRING];
   int quit, sizea, sizeb;
   INT blockstart;
 
-  if (!searchA(&string, &sizea, tmp, sizeof(tmp))) return;
+  if (!searchA(&string, &sizea, tmpInput, sizeof(tmpInput))) return;
   quit = -1;
   blockstart = base + cursor - sizea + 1;
   do {
