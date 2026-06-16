@@ -101,6 +101,9 @@ typedef struct _typePage {
     - 0x1E between each record (except last), an ASCII record separator
   - 0x1D
   - end of file
+
+  In the default encodings embedded into the built binary, 0x1C (ASCII File Separator)
+  is inserted between files
 */
 typedef struct _encodingEntry {
   char8_t* name;
