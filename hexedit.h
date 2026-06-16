@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <uchar.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
@@ -85,6 +86,30 @@ typedef struct _typePage {
   unsigned char *vals;
 } typePage;
 
+/* Encoding files are structured as follows:
+  - Encoding name, as UTF-8 string, null terminated, limited to 256 bytes
+  - 0x1D, an ASCII group separator
+  - Display characters for each of 256 values of 8 bits,
+    encoded as a UTF-8 string, and can include emoji, including complex ZWJ sequences.
+    Null terminated at the end of this all.
+  - 0x1D
+  - Optional packed color encodings:
+    - Name of the color, utf8, but rather whatever display.c has mapped, null terminated
+    - Packed data. It's 256 bit, so 32 bytes.
+    - A character can map only to one color, duplicate entries will cause an error
+    - 0x1E between each record (except last), an ASCII record separator
+  - 0x1D
+  - end of file
+
+  In the default encodings embedded into the built binary, 0x1C (ASCII File Separator)
+  is inserted between files
+*/
+typedef struct _encodingEntry {
+  char8_t* name;
+  char8_t** displayCharacters;
+  uint8_t colorMap[256];
+} encodingEntry;
+
 
 /*******************************************************************************/
 /* Global variables */
@@ -101,9 +126,13 @@ extern int sizeCopyBuffer, *bufferAttr;
 extern char *progName, *fileName, *baseName;
 extern unsigned char *buffer, *copyBuffer;
 extern typePage *edited;
+extern encodingEntry **encodings, *selectedEncoding;
 
 extern char *lastFindFile, *lastYankToAFile, *lastAskHexString, *lastAskAsciiString, *lastFillWithStringHexa, *lastFillWithStringAscii;
 
+// Embedded encoding data
+extern char _binary_default_enc_start;
+extern char _binary_default_enc_end;
 
 /*******************************************************************************/
 /* Miscellaneous functions declaration */
@@ -200,6 +229,10 @@ char *mymemmem(char *a, int sizea, char *b, int sizeb);
 char *mymemrmem(char *a, int sizea, char *b, int sizeb);
 int is_file(char *name);
 int hexStringToBinString(char *p, int *l);
+
+// Encoding handling
+encodingEntry** encoding_load(char *encodingFile, int* count);
+encodingEntry** encoding_parse(uint8_t *buffer, int* count, size_t size);
 
 /*******************************************************************************/
 /* Functions provided for OSs that don't have them */

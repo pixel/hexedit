@@ -10,6 +10,7 @@ mandir = @mandir@/man1
 bindir = @bindir@
 srcdir = @srcdir@
 
+VPATH = @srcdir@
 INCL = @INCL@
 SRCS = @SRCS@
 OTHER = @OTHER@
@@ -54,4 +55,4 @@ ci: clean
 	ci -l -mdefault *
 
 TAGS:
-	etags *.[hc]
+	etags '$(srcdir)'/*.[hc]

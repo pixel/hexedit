@@ -14,7 +14,7 @@ define(TheVERSION, 1.6)
 PRODUCT=hexedit
 VERSION=TheVERSION
 INCL=hexedit.h
-SRCS="hexedit.c display.c mark.c page.c file.c interact.c misc.c search.c"
+SRCS="hexedit.c display.c mark.c page.c file.c interact.c misc.c search.c encoding.c"
 OTHER="COPYING Changes TODO install-sh configure config.h.in hexedit.1 Makefile.in configure.ac Makefile-build.in"
 AC_SUBST(PRODUCT)
 AC_SUBST(VERSION)
@@ -40,7 +40,7 @@ AC_CHECK_LIB(curses, initscr, LIBS="$LIBS -lcurses",
     AC_MSG_ERROR([libcurses/libncurses not found.]))]
 )
 AC_CHECK_LIB(tinfo, keypad, LIBS="$LIBS -ltinfo")
-AC_CHECK_FUNC(use_default_colors, 
+AC_CHECK_FUNC(use_default_colors,
   AC_DEFINE(HAVE_COLORS, , "Define if you want colored (fruit salad) display option")
 )
 
@@ -67,7 +67,7 @@ if test $ac_cv_func_basename = no; then
     LIBS="$LIBS -lgen"])
 fi
 
-AC_CHECK_DECLS([dirname, basename, memrchr, memmem, memrmem], , , 
+AC_CHECK_DECLS([dirname, basename, memrchr, memmem, memrmem], , ,
 $ac_includes_default
 #if HAVE_LIBGEN_H
 #include <libgen.h>

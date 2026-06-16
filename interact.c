@@ -204,7 +204,7 @@ int setTo(int c)
   if (cursor > nbBytes) return FALSE;
   if (hexOrAscii) {
       if (!isxdigit(c)) return FALSE;
-      val = hexCharToInt(c);	  
+      val = hexCharToInt(c);
       val = cursorOffset ? setLowBits(buffer[cursor], val) : setHighBits(buffer[cursor], val);
   }
   else val = c;
@@ -218,6 +218,14 @@ int setTo(int c)
   return TRUE;
 }
 
+
+static void switch_encoding(void)
+{
+  encodingEntry **nextEncoding = encodings;
+  while (*(nextEncoding++) != selectedEncoding);
+  if (*nextEncoding == NULL) nextEncoding = encodings;
+  selectedEncoding = *nextEncoding;
+}
 
 /****************************************************
  ask_about_* or functions that present a prompt
@@ -291,7 +299,7 @@ static void save_buffer(void)
       }
     q = p->next;
     freePage(p);
-  } 
+  }
   edited = NULL;
   if (lastEditedLoc > fileSize) fileSize = lastEditedLoc;
   lastEditedLoc = 0;
@@ -544,6 +552,10 @@ int key_to_function(int key)
       ask_about_save_and_quit();
       break;
 
+    case ALT('E'):
+      switch_encoding();
+      break;
+
     default:
       if ((key >= 256 || !setTo(key))) firstTimeHelp();
     }
@@ -553,7 +565,7 @@ int key_to_function(int key)
 
 
 
-static void escaped_command(void) 
+static void escaped_command(void)
 {
   char tmp[BLOCK_SEARCH_SIZE];
   int c, i;
@@ -562,10 +574,10 @@ static void escaped_command(void)
   switch (c)
   {
   case KEY_RIGHT:
-  case 'f': 
+  case 'f':
     forward_chars();
     break;
-    
+
   case KEY_LEFT:
   case 'b':
     backward_chars();
@@ -623,15 +635,19 @@ static void escaped_command(void)
     truncate_file();
     break;
 
+  case 'e':
+    switch_encoding();
+    break;
+
   case '':
     c = getch();
     if (c == 'O') {
       switch (c = getch())
       {
-      case 'C': 
+      case 'C':
 	forward_chars();
 	break;
-    
+
       case 'D':
 	backward_chars();
 	break;
@@ -668,16 +684,16 @@ static void escaped_command(void)
 	goto_char();
 	break;
 
-      default: 
+      default:
 	firstTimeHelp();
       }
     } else firstTimeHelp();
     break;
 
-  case '[': 
+  case '[':
     for (i = 0; i < BLOCK_SEARCH_SIZE - 1; i++) { tmp[i] = c = getch(); if (!isdigit(c)) break; }
     tmp[i < BLOCK_SEARCH_SIZE - 1 ? i + 1 : i] = '\0';
-    
+
     if (0);
     else if (streq(tmp, "2~")) yank();
     else if (streq(tmp, "5~")) scroll_down();
